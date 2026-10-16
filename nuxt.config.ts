@@ -15,7 +15,7 @@ export default defineNuxtConfig({
   // so ANTHROPIC_API_KEY keeps its standard name and is never serialized into the build.
   runtimeConfig: {
     public: {
-      repoUrl: '' // NUXT_PUBLIC_REPO_URL
+      repoUrl: 'https://github.com/nangui/form2fhir' // override with NUXT_PUBLIC_REPO_URL
     }
   },
 
