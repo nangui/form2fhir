@@ -1,0 +1,215 @@
+<!doctype html>
+<!-- Source of eval/fixtures/bilan-diabete-type-2.pdf. Written for Form2FHIR: a fictitious, blank French
+     follow-up form (no real data, no real clinic). Free to reuse (CC0).
+     Embedded instruments: AUDIT-C (WHO AUDIT items 1–3, public domain, Saunders et al. 1993) and
+     PHQ-2 (PHQ-9 items 1–2, © Pfizer, no permission required to reproduce).
+     Rebuild: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --no-pdf-header-footer \
+       --print-to-pdf=eval/fixtures/bilan-diabete-type-2.pdf eval/forms/bilan-diabete-type-2.html -->
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Bilan annuel de suivi — Diabète de type 2</title>
+<style>
+  @page { size: A4; margin: 14mm 16mm; }
+  body { font: 9.8pt/1.4 Georgia, 'Times New Roman', serif; color: #1c1917; }
+  header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2pt solid #1c1917; padding-bottom: 6pt; margin-bottom: 8pt; }
+  h1 { font-size: 17pt; margin: 0; }
+  .sub { color: #57534e; font-size: 9pt; margin: 2pt 0 0; }
+  .ref { font: 8pt Helvetica, Arial, sans-serif; color: #57534e; text-align: right; }
+  h2 { font: 600 8.6pt/1 Helvetica, Arial, sans-serif; text-transform: uppercase; letter-spacing: 0.08em;
+       background: #f5f5f4; border-left: 3pt solid #1c1917; padding: 4pt 6pt; margin: 11pt 0 5pt; break-after: avoid; }
+  .note { font-size: 8.6pt; color: #57534e; font-style: italic; margin: 0 0 4pt; }
+  .row { display: flex; gap: 14pt; margin: 4pt 0; align-items: baseline; }
+  .field { flex: 1; display: flex; gap: 5pt; align-items: baseline; white-space: nowrap; }
+  .line { flex: 1; border-bottom: 0.6pt solid #78716c; height: 11pt; min-width: 30pt; }
+  .unit { color: #57534e; font-size: 8.6pt; }
+  .q { margin: 6pt 0 2pt; break-after: avoid; }
+  .opts { display: flex; flex-wrap: wrap; gap: 3pt 14pt; margin-left: 10pt; }
+  .box { display: inline-block; width: 7.5pt; height: 7.5pt; border: 0.8pt solid #1c1917; margin-right: 4pt; vertical-align: -1pt; }
+  table { width: 100%; border-collapse: collapse; margin-top: 3pt; font-size: 9pt; }
+  th, td { border: 0.6pt solid #a8a29e; padding: 3pt 5pt; vertical-align: middle; }
+  th { font: 600 7.6pt Helvetica, Arial, sans-serif; text-transform: uppercase; letter-spacing: 0.04em; background: #fafaf9; }
+  td.c { text-align: center; width: 13%; }
+  .lines .line { margin: 8pt 0 0 10pt; flex: none; }
+  .section { break-inside: avoid; }
+  .foot { margin-top: 14pt; font-size: 7.8pt; color: #57534e; border-top: 0.6pt solid #a8a29e; padding-top: 5pt; }
+</style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Bilan annuel de suivi — Diabète de type 2</h1>
+      <p class="sub">Consultation de diabétologie · à remplir en partie par le patient (sections A à G) et par le soignant (sections H à J)</p>
+    </div>
+    <div class="ref">Formulaire DT2-BA<br>Version 1.0</div>
+  </header>
+
+  <div class="row">
+    <div class="field">Nom <span class="line"></span></div>
+    <div class="field">Prénom <span class="line"></span></div>
+  </div>
+  <div class="row">
+    <div class="field" style="flex:0.9">Date de naissance <span class="line"></span></div>
+    <div class="field" style="flex:0.7">Sexe&nbsp; <span><span class="box"></span>Femme</span> <span><span class="box"></span>Homme</span></div>
+    <div class="field" style="flex:0.9">Date de la consultation <span class="line"></span></div>
+  </div>
+
+  <div class="section">
+    <h2>A · Antécédents</h2>
+    <div class="row"><div class="field" style="flex:0.6">Année du diagnostic du diabète <span class="line"></span></div></div>
+    <div class="q">Un de vos parents, frères ou sœurs a-t-il un diabète ?</div>
+    <div class="opts"><span><span class="box"></span>Oui</span><span><span class="box"></span>Non</span><span><span class="box"></span>Je ne sais pas</span></div>
+    <div class="q">Avez-vous l'une des maladies suivantes ? <i>(cochez tout ce qui s'applique)</i></div>
+    <div class="opts">
+      <span><span class="box"></span>Hypertension artérielle</span>
+      <span><span class="box"></span>Excès de cholestérol</span>
+      <span><span class="box"></span>Infarctus du myocarde ou angine de poitrine</span>
+      <span><span class="box"></span>Accident vasculaire cérébral</span>
+      <span><span class="box"></span>Artériopathie des membres inférieurs</span>
+      <span><span class="box"></span>Insuffisance rénale chronique</span>
+      <span><span class="box"></span>Aucune de ces maladies</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>B · Traitements actuels</h2>
+    <div class="q">Quels médicaments prenez-vous pour votre diabète ? <i>(cochez tout ce qui s'applique)</i></div>
+    <div class="opts">
+      <span><span class="box"></span>Metformine</span>
+      <span><span class="box"></span>Sulfamide hypoglycémiant</span>
+      <span><span class="box"></span>Inhibiteur de la DPP-4 (gliptine)</span>
+      <span><span class="box"></span>Agoniste du récepteur du GLP-1</span>
+      <span><span class="box"></span>Inhibiteur du SGLT2 (gliflozine)</span>
+      <span><span class="box"></span>Insuline</span>
+      <span><span class="box"></span>Aucun médicament</span>
+    </div>
+    <div class="row"><div class="field" style="flex:0.7">Si insuline : nombre d'injections par jour <span class="line"></span></div></div>
+    <div class="q">Autres médicaments pris régulièrement</div>
+    <div class="lines"><div class="line"></div></div>
+    <div class="q">Êtes-vous allergique à un médicament ?</div>
+    <div class="opts"><span><span class="box"></span>Oui</span><span><span class="box"></span>Non</span></div>
+    <div class="row"><div class="field">Si oui, précisez le médicament et la réaction <span class="line"></span></div></div>
+  </div>
+
+  <div class="section">
+    <h2>C · Autosurveillance et hypoglycémies</h2>
+    <div class="q">À quelle fréquence mesurez-vous votre glycémie capillaire ?</div>
+    <div class="opts">
+      <span><span class="box"></span>Jamais</span><span><span class="box"></span>Moins d'une fois par jour</span>
+      <span><span class="box"></span>1 à 3 fois par jour</span><span><span class="box"></span>Plus de 3 fois par jour</span>
+    </div>
+    <div class="q">Combien d'hypoglycémies (glycémie inférieure à 0,70 g/L ou malaise typique) avez-vous eues au cours des 3 derniers mois ?</div>
+    <div class="opts"><span><span class="box"></span>Aucune</span><span><span class="box"></span>1 ou 2</span><span><span class="box"></span>3 ou plus</span></div>
+    <div class="q">Avez-vous eu une hypoglycémie sévère ayant nécessité l'aide d'une autre personne au cours des 12 derniers mois ?</div>
+    <div class="opts"><span><span class="box"></span>Oui</span><span><span class="box"></span>Non</span></div>
+  </div>
+
+  <div class="section">
+    <h2>D · Symptômes actuels</h2>
+    <p class="note">Au cours du dernier mois, avez-vous ressenti :</p>
+    <table>
+      <tr><th style="text-align:left">Symptôme</th><th>Oui</th><th>Non</th></tr>
+      <tr><td>Une soif excessive</td><td class="c"><span class="box"></span></td><td class="c"><span class="box"></span></td></tr>
+      <tr><td>Un besoin d'uriner fréquent, y compris la nuit</td><td class="c"><span class="box"></span></td><td class="c"><span class="box"></span></td></tr>
+      <tr><td>Une vision trouble</td><td class="c"><span class="box"></span></td><td class="c"><span class="box"></span></td></tr>
+      <tr><td>Des fourmillements, des brûlures ou un engourdissement des pieds</td><td class="c"><span class="box"></span></td><td class="c"><span class="box"></span></td></tr>
+      <tr><td>Une plaie ou une blessure du pied qui ne guérit pas</td><td class="c"><span class="box"></span></td><td class="c"><span class="box"></span></td></tr>
+      <tr><td>Une douleur dans la poitrine à l'effort</td><td class="c"><span class="box"></span></td><td class="c"><span class="box"></span></td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>E · Mode de vie</h2>
+    <div class="q">Concernant le tabac, vous êtes :</div>
+    <div class="opts">
+      <span><span class="box"></span>Fumeur quotidien</span><span><span class="box"></span>Fumeur occasionnel</span>
+      <span><span class="box"></span>Ancien fumeur</span><span><span class="box"></span>Non-fumeur (n'a jamais fumé)</span>
+    </div>
+    <div class="row"><div class="field" style="flex:0.85">Activité physique d'intensité modérée (marche rapide, vélo…) : <span class="line"></span><span class="unit">minutes par semaine</span></div></div>
+    <div class="q">Suivez-vous des conseils alimentaires adaptés à votre diabète ?</div>
+    <div class="opts"><span><span class="box"></span>Oui</span><span><span class="box"></span>Non</span><span><span class="box"></span>Parfois</span></div>
+  </div>
+
+  <div class="section">
+    <h2>F · Consommation d'alcool (AUDIT-C)</h2>
+    <p class="note">Un verre standard correspond à 10 g d'alcool pur : 25 cl de bière à 5 %, 10 cl de vin à 12 % ou 3 cl d'alcool fort à 40 %.</p>
+    <div class="q">1. Quelle est la fréquence de votre consommation d'alcool ?</div>
+    <div class="opts">
+      <span><span class="box"></span>Jamais (0)</span><span><span class="box"></span>Une fois par mois ou moins (1)</span>
+      <span><span class="box"></span>2 à 4 fois par mois (2)</span><span><span class="box"></span>2 à 3 fois par semaine (3)</span>
+      <span><span class="box"></span>Au moins 4 fois par semaine (4)</span>
+    </div>
+    <div class="q">2. Combien de verres contenant de l'alcool consommez-vous un jour typique où vous buvez ?</div>
+    <div class="opts">
+      <span><span class="box"></span>1 ou 2 (0)</span><span><span class="box"></span>3 ou 4 (1)</span><span><span class="box"></span>5 ou 6 (2)</span>
+      <span><span class="box"></span>7 à 9 (3)</span><span><span class="box"></span>10 ou plus (4)</span>
+    </div>
+    <div class="q">3. Avec quelle fréquence buvez-vous six verres ou davantage lors d'une même occasion ?</div>
+    <div class="opts">
+      <span><span class="box"></span>Jamais (0)</span><span><span class="box"></span>Moins d'une fois par mois (1)</span>
+      <span><span class="box"></span>Une fois par mois (2)</span><span><span class="box"></span>Une fois par semaine (3)</span>
+      <span><span class="box"></span>Tous les jours ou presque (4)</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>G · Moral (PHQ-2)</h2>
+    <p class="note">Au cours des 2 dernières semaines, selon quelle fréquence avez-vous été gêné(e) par les problèmes suivants ?</p>
+    <table>
+      <tr><th style="text-align:left">Problème</th><th>Jamais (0)</th><th>Plusieurs jours (1)</th><th>Plus de la moitié du temps (2)</th><th>Presque tous les jours (3)</th></tr>
+      <tr><td>Peu d'intérêt ou de plaisir à faire les choses</td><td class="c"><span class="box"></span></td><td class="c"><span class="box"></span></td><td class="c"><span class="box"></span></td><td class="c"><span class="box"></span></td></tr>
+      <tr><td>Être triste, déprimé(e) ou désespéré(e)</td><td class="c"><span class="box"></span></td><td class="c"><span class="box"></span></td><td class="c"><span class="box"></span></td><td class="c"><span class="box"></span></td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>H · Examen clinique <span style="font-weight:400;text-transform:none;letter-spacing:0">— rempli par le soignant</span></h2>
+    <div class="row">
+      <div class="field">Poids <span class="line"></span><span class="unit">kg</span></div>
+      <div class="field">Taille <span class="line"></span><span class="unit">cm</span></div>
+      <div class="field">IMC <span class="line"></span><span class="unit">kg/m²</span></div>
+    </div>
+    <div class="row">
+      <div class="field">Tour de taille <span class="line"></span><span class="unit">cm</span></div>
+      <div class="field">Fréquence cardiaque <span class="line"></span><span class="unit">battements/min</span></div>
+    </div>
+    <div class="row">
+      <div class="field">Pression artérielle en position assise : systolique <span class="line"></span><span class="unit">mmHg</span></div>
+      <div class="field" style="flex:0.6">diastolique <span class="line"></span><span class="unit">mmHg</span></div>
+    </div>
+    <div class="q">Sensibilité des pieds au monofilament 10 g</div>
+    <div class="opts"><span><span class="box"></span>Normale</span><span><span class="box"></span>Diminuée</span><span><span class="box"></span>Absente</span></div>
+    <div class="q">Pouls pédieux</div>
+    <div class="opts"><span><span class="box"></span>Perçus des deux côtés</span><span><span class="box"></span>Absents ou diminués</span></div>
+  </div>
+
+  <div class="section">
+    <h2>I · Derniers résultats biologiques</h2>
+    <table>
+      <tr><th style="text-align:left">Examen</th><th>Résultat</th><th>Unité</th><th>Date du prélèvement</th></tr>
+      <tr><td>Hémoglobine glyquée (HbA1c)</td><td></td><td class="c">%</td><td></td></tr>
+      <tr><td>Glycémie à jeun</td><td></td><td class="c">g/L</td><td></td></tr>
+      <tr><td>Cholestérol LDL</td><td></td><td class="c">g/L</td><td></td></tr>
+      <tr><td>Créatininémie</td><td></td><td class="c">µmol/L</td><td></td></tr>
+      <tr><td>Débit de filtration glomérulaire estimé (CKD-EPI)</td><td></td><td class="c">mL/min/1,73 m²</td><td></td></tr>
+      <tr><td>Rapport albuminurie/créatininurie</td><td></td><td class="c">mg/mmol</td><td></td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2>J · Dépistage des complications et prévention</h2>
+    <div class="row"><div class="field" style="flex:0.7">Date du dernier examen du fond d'œil <span class="line"></span></div></div>
+    <div class="q">Résultat du dernier examen du fond d'œil</div>
+    <div class="opts"><span><span class="box"></span>Pas de rétinopathie</span><span><span class="box"></span>Rétinopathie diabétique</span><span><span class="box"></span>Non connu</span></div>
+    <div class="q">Vaccination contre la grippe saisonnière cette année</div>
+    <div class="opts"><span><span class="box"></span>Oui</span><span><span class="box"></span>Non</span></div>
+    <div class="q">Le patient a-t-il participé à un programme d'éducation thérapeutique ?</div>
+    <div class="opts"><span><span class="box"></span>Oui</span><span><span class="box"></span>Non</span><span><span class="box"></span>Proposé, en attente</span></div>
+    <div class="q">Objectifs convenus avec le patient pour l'année à venir</div>
+    <div class="lines"><div class="line"></div><div class="line"></div></div>
+  </div>
+
+  <p class="foot">Formulaire fictif rédigé pour la démonstration Form2FHIR — aucune donnée patient, ne pas utiliser pour la prise en charge. Réutilisation libre (CC0).
+    AUDIT-C : items 1 à 3 du questionnaire AUDIT de l'OMS (Saunders et al., 1993). PHQ-2 : items 1 et 2 du PHQ-9 (Kroenke et al., 2001), reproduction libre.</p>
+</body>
+</html>
