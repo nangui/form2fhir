@@ -1,0 +1,9 @@
+# The Vercel CLI does not read .gitignore: never upload secrets or local build output.
+.env
+.env.*
+!.env.example
+.output
+.nuxt
+.data
+node_modules
+.playwright-mcp
