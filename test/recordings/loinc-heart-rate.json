@@ -1,0 +1,95 @@
+[
+    100,
+    [
+        "8867-4",
+        "8877-3",
+        "73799-9",
+        "96935-2",
+        "69000-8",
+        "44609-6",
+        "44610-4"
+    ],
+    {
+        "datatype": [
+            "REAL",
+            "REAL",
+            "REAL",
+            "REAL",
+            "REAL",
+            "REAL",
+            "REAL"
+        ],
+        "units": [
+            [
+                {
+                    "unit": "{beats}/min"
+                },
+                {
+                    "unit": "{counts}/min"
+                }
+            ],
+            [
+                {
+                    "unit": "{beats}/min"
+                }
+            ],
+            [
+                {
+                    "unit": "/min"
+                }
+            ],
+            [
+                {
+                    "unit": "{beats}/min"
+                }
+            ],
+            [
+                {
+                    "unit": "{beats}/min"
+                }
+            ],
+            [
+                {
+                    "unit": "{beats}/min"
+                }
+            ],
+            [
+                {
+                    "unit": "{beats}/min"
+                }
+            ]
+        ],
+        "AnswerLists": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ]
+    },
+    [
+        [
+            "Heart rate"
+        ],
+        [
+            "Heart rate 12 hour"
+        ],
+        [
+            "Heart rate Blood Preductal Pulse oximetry"
+        ],
+        [
+            "Heart rate unspecified time minimum by Pedometer"
+        ],
+        [
+            "Heart rate --sitting"
+        ],
+        [
+            "Deprecated Heart rate Episode maximum by Oximetry"
+        ],
+        [
+            "Deprecated Heart rate Episode minimum by Oximetry"
+        ]
+    ]
+]

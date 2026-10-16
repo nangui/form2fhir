@@ -1,0 +1,77 @@
+{
+    "resourceType": "OperationOutcome",
+    "text": {
+        "status": "generated",
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><h1>Operation Outcome</h1><table border=\"0\"><tr><td style=\"font-weight: bold;\">WARNING</td><td>[Questionnaire.item[0].code[0], Line[1] Col[213]]</td><td>The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)</td></tr><tr><td style=\"font-weight: bold;\">WARNING</td><td>[Questionnaire, Line[1] Col[217]]</td><td>Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)</td></tr></table></div>"
+    },
+    "issue": [
+        {
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line",
+                    "valueInteger": 1
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col",
+                    "valueInteger": 213
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                    "valueString": "TERMINOLOGY_TX_SYSTEM_UNSUPPORTED"
+                }
+            ],
+            "severity": "warning",
+            "code": "processing",
+            "details": {
+                "coding": [
+                    {
+                        "system": "http://hl7.org/fhir/java-core-messageId",
+                        "code": "TERMINOLOGY_TX_SYSTEM_UNSUPPORTED"
+                    }
+                ]
+            },
+            "diagnostics": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+            "location": [
+                "Questionnaire.item[0].code[0]",
+                "Line[1] Col[213]"
+            ],
+            "expression": [
+                "Questionnaire.item[0].code[0]"
+            ]
+        },
+        {
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line",
+                    "valueInteger": 1
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col",
+                    "valueInteger": 217
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                    "valueString": "http://hl7.org/fhir/StructureDefinition/DomainResource#dom-6"
+                }
+            ],
+            "severity": "warning",
+            "code": "processing",
+            "details": {
+                "coding": [
+                    {
+                        "system": "http://hl7.org/fhir/java-core-messageId",
+                        "code": "http://hl7.org/fhir/StructureDefinition/DomainResource#dom-6"
+                    }
+                ]
+            },
+            "diagnostics": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)",
+            "location": [
+                "Questionnaire",
+                "Line[1] Col[217]"
+            ],
+            "expression": [
+                "Questionnaire"
+            ]
+        }
+    ]
+}

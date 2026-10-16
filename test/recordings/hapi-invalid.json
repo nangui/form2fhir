@@ -1,0 +1,111 @@
+{
+    "resourceType": "OperationOutcome",
+    "text": {
+        "status": "generated",
+        "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><h1>Operation Outcome</h1><table border=\"0\"><tr><td style=\"font-weight: bold;\">ERROR</td><td>[Questionnaire.item[1], Line[1] Col[129]]</td><td>Constraint failed: que-1: 'Group items must have nested items, display items cannot have nested items'</td></tr><tr><td style=\"font-weight: bold;\">WARNING</td><td>[Questionnaire, Line[1] Col[131]]</td><td>Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)</td></tr><tr><td style=\"font-weight: bold;\">ERROR</td><td>[Questionnaire, Line[1] Col[131]]</td><td>Constraint failed: que-2: 'The link ids for groups and questions must be unique within the questionnaire'</td></tr></table></div>"
+    },
+    "issue": [
+        {
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line",
+                    "valueInteger": 1
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col",
+                    "valueInteger": 129
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                    "valueString": "http://hl7.org/fhir/StructureDefinition/Questionnaire#que-1"
+                }
+            ],
+            "severity": "error",
+            "code": "processing",
+            "details": {
+                "coding": [
+                    {
+                        "system": "http://hl7.org/fhir/java-core-messageId",
+                        "code": "http://hl7.org/fhir/StructureDefinition/Questionnaire#que-1"
+                    }
+                ]
+            },
+            "diagnostics": "Constraint failed: que-1: 'Group items must have nested items, display items cannot have nested items'",
+            "location": [
+                "Questionnaire.item[1]",
+                "Line[1] Col[129]"
+            ],
+            "expression": [
+                "Questionnaire.item[1]"
+            ]
+        },
+        {
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line",
+                    "valueInteger": 1
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col",
+                    "valueInteger": 131
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                    "valueString": "http://hl7.org/fhir/StructureDefinition/DomainResource#dom-6"
+                }
+            ],
+            "severity": "warning",
+            "code": "processing",
+            "details": {
+                "coding": [
+                    {
+                        "system": "http://hl7.org/fhir/java-core-messageId",
+                        "code": "http://hl7.org/fhir/StructureDefinition/DomainResource#dom-6"
+                    }
+                ]
+            },
+            "diagnostics": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)",
+            "location": [
+                "Questionnaire",
+                "Line[1] Col[131]"
+            ],
+            "expression": [
+                "Questionnaire"
+            ]
+        },
+        {
+            "extension": [
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line",
+                    "valueInteger": 1
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col",
+                    "valueInteger": 131
+                },
+                {
+                    "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                    "valueString": "http://hl7.org/fhir/StructureDefinition/Questionnaire#que-2"
+                }
+            ],
+            "severity": "error",
+            "code": "processing",
+            "details": {
+                "coding": [
+                    {
+                        "system": "http://hl7.org/fhir/java-core-messageId",
+                        "code": "http://hl7.org/fhir/StructureDefinition/Questionnaire#que-2"
+                    }
+                ]
+            },
+            "diagnostics": "Constraint failed: que-2: 'The link ids for groups and questions must be unique within the questionnaire'",
+            "location": [
+                "Questionnaire",
+                "Line[1] Col[131]"
+            ],
+            "expression": [
+                "Questionnaire"
+            ]
+        }
+    ]
+}

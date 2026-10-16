@@ -1,0 +1,29 @@
+[
+    2,
+    [
+        "44249-1",
+        "89206-7"
+    ],
+    {
+        "datatype": [
+            null,
+            null
+        ],
+        "units": [
+            null,
+            null
+        ],
+        "AnswerLists": [
+            null,
+            null
+        ]
+    },
+    [
+        [
+            "PHQ-9 quick depression assessment panel [Reported.PHQ]"
+        ],
+        [
+            "Patient Health Questionnaire-9: Modified for Teens [Reported.PHQ.Teen]"
+        ]
+    ]
+]

@@ -1,0 +1,567 @@
+[
+    7,
+    [
+        "44250-9",
+        "104136-7",
+        "95393-5",
+        "54658-0",
+        "54637-4",
+        "54659-8",
+        "54636-6"
+    ],
+    {
+        "datatype": [
+            "CNE",
+            "CNE",
+            "CNE",
+            "CNE",
+            "CNE",
+            "CNE",
+            "CNE"
+        ],
+        "units": [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ],
+        "AnswerLists": [
+            [
+                {
+                    "AnswerListId": "LL358-3",
+                    "AnswerListName": "PHQ",
+                    "answers": [
+                        {
+                            "AnswerStringID": "LA6568-5",
+                            "DisplayText": "Not at all",
+                            "SequenceNo": 1,
+                            "Score": 0
+                        },
+                        {
+                            "AnswerStringID": "LA6569-3",
+                            "DisplayText": "Several days",
+                            "SequenceNo": 2,
+                            "Score": 1
+                        },
+                        {
+                            "AnswerStringID": "LA6570-1",
+                            "DisplayText": "More than half the days",
+                            "SequenceNo": 3,
+                            "Score": 2
+                        },
+                        {
+                            "AnswerStringID": "LA6571-9",
+                            "DisplayText": "Nearly every day",
+                            "SequenceNo": 4,
+                            "Score": 3
+                        }
+                    ],
+                    "contexts": [
+                        {
+                            "context": "44249-1",
+                            "LinkType": "NORMATIVE"
+                        },
+                        {
+                            "context": "52744-0",
+                            "LinkType": "NORMATIVE"
+                        },
+                        {
+                            "context": "52745-7",
+                            "LinkType": "NORMATIVE"
+                        },
+                        {
+                            "context": "52746-5",
+                            "LinkType": "NORMATIVE"
+                        },
+                        {
+                            "context": "52748-1",
+                            "LinkType": "NORMATIVE"
+                        },
+                        {
+                            "context": "55757-9",
+                            "LinkType": "NORMATIVE"
+                        },
+                        {
+                            "context": "57039-0",
+                            "LinkType": "NORMATIVE"
+                        },
+                        {
+                            "context": "57190-1",
+                            "LinkType": "NORMATIVE"
+                        },
+                        {
+                            "context": "57191-9",
+                            "LinkType": "NORMATIVE"
+                        },
+                        {
+                            "context": "69723-5",
+                            "LinkType": "NORMATIVE"
+                        },
+                        {
+                            "context": "69724-3",
+                            "LinkType": "NORMATIVE"
+                        },
+                        {
+                            "context": "69729-2",
+                            "LinkType": "NORMATIVE"
+                        },
+                        {
+                            "context": "85907-4",
+                            "LinkType": "NORMATIVE"
+                        },
+                        {
+                            "context": "86189-8",
+                            "LinkType": "NORMATIVE"
+                        },
+                        {
+                            "context": "88368-6",
+                            "LinkType": "NORMATIVE"
+                        },
+                        {
+                            "context": "88373-6",
+                            "LinkType": "NORMATIVE"
+                        },
+                        {
+                            "context": "94329-0",
+                            "LinkType": "NORMATIVE"
+                        }
+                    ]
+                },
+                {
+                    "AnswerListId": "LL361-7",
+                    "AnswerListName": "Y/N",
+                    "answers": [
+                        {
+                            "AnswerStringID": "LA33-6",
+                            "DisplayText": "Yes",
+                            "SequenceNo": 1,
+                            "Score": null
+                        },
+                        {
+                            "AnswerStringID": "LA32-8",
+                            "DisplayText": "No",
+                            "SequenceNo": 2,
+                            "Score": null
+                        }
+                    ],
+                    "contexts": [
+                        {
+                            "context": null,
+                            "LinkType": "EXAMPLE"
+                        }
+                    ]
+                },
+                {
+                    "AnswerListId": "LL5871-0",
+                    "AnswerListName": "Frequency: Not at all --> Nearly every day",
+                    "answers": [
+                        {
+                            "AnswerStringID": "LA6568-5",
+                            "DisplayText": "Not at all",
+                            "SequenceNo": 1,
+                            "Score": 0
+                        },
+                        {
+                            "AnswerStringID": "LA6569-3",
+                            "DisplayText": "Several days",
+                            "SequenceNo": 2,
+                            "Score": 1
+                        },
+                        {
+                            "AnswerStringID": "LA6570-1",
+                            "DisplayText": "More than half the days",
+                            "SequenceNo": 3,
+                            "Score": 2
+                        },
+                        {
+                            "AnswerStringID": "LA6571-9",
+                            "DisplayText": "Nearly every day",
+                            "SequenceNo": 4,
+                            "Score": 3
+                        }
+                    ],
+                    "contexts": [
+                        {
+                            "context": "97023-6",
+                            "LinkType": "NORMATIVE"
+                        }
+                    ]
+                },
+                {
+                    "AnswerListId": "LL6099-7",
+                    "AnswerListName": "Freq: Not at all to near evry day w/o score",
+                    "answers": [
+                        {
+                            "AnswerStringID": "LA6568-5",
+                            "DisplayText": "Not at all",
+                            "SequenceNo": 1,
+                            "Score": null
+                        },
+                        {
+                            "AnswerStringID": "LA6569-3",
+                            "DisplayText": "Several days",
+                            "SequenceNo": 2,
+                            "Score": null
+                        },
+                        {
+                            "AnswerStringID": "LA6570-1",
+                            "DisplayText": "More than half the days",
+                            "SequenceNo": 3,
+                            "Score": null
+                        },
+                        {
+                            "AnswerStringID": "LA6571-9",
+                            "DisplayText": "Nearly every day",
+                            "SequenceNo": 4,
+                            "Score": null
+                        }
+                    ],
+                    "contexts": [
+                        {
+                            "context": "99192-7",
+                            "LinkType": "NORMATIVE"
+                        },
+                        {
+                            "context": "99745-2",
+                            "LinkType": "NORMATIVE"
+                        }
+                    ]
+                }
+            ],
+            [
+                {
+                    "AnswerListId": "LL358-3",
+                    "AnswerListName": "PHQ",
+                    "answers": [
+                        {
+                            "AnswerStringID": "LA6568-5",
+                            "DisplayText": "Not at all",
+                            "SequenceNo": 1,
+                            "Score": 0
+                        },
+                        {
+                            "AnswerStringID": "LA6569-3",
+                            "DisplayText": "Several days",
+                            "SequenceNo": 2,
+                            "Score": 1
+                        },
+                        {
+                            "AnswerStringID": "LA6570-1",
+                            "DisplayText": "More than half the days",
+                            "SequenceNo": 3,
+                            "Score": 2
+                        },
+                        {
+                            "AnswerStringID": "LA6571-9",
+                            "DisplayText": "Nearly every day",
+                            "SequenceNo": 4,
+                            "Score": 3
+                        }
+                    ],
+                    "contexts": [
+                        {
+                            "context": null,
+                            "LinkType": "NORMATIVE"
+                        }
+                    ]
+                }
+            ],
+            [
+                {
+                    "AnswerListId": "LL358-3",
+                    "AnswerListName": "PHQ",
+                    "answers": [
+                        {
+                            "AnswerStringID": "LA6568-5",
+                            "DisplayText": "Not at all",
+                            "SequenceNo": 1,
+                            "Score": 0
+                        },
+                        {
+                            "AnswerStringID": "LA6569-3",
+                            "DisplayText": "Several days",
+                            "SequenceNo": 2,
+                            "Score": 1
+                        },
+                        {
+                            "AnswerStringID": "LA6570-1",
+                            "DisplayText": "More than half the days",
+                            "SequenceNo": 3,
+                            "Score": 2
+                        },
+                        {
+                            "AnswerStringID": "LA6571-9",
+                            "DisplayText": "Nearly every day",
+                            "SequenceNo": 4,
+                            "Score": 3
+                        }
+                    ],
+                    "contexts": [
+                        {
+                            "context": null,
+                            "LinkType": "PREFERRED"
+                        }
+                    ]
+                },
+                {
+                    "AnswerListId": "LL361-7",
+                    "AnswerListName": "Y/N",
+                    "answers": [
+                        {
+                            "AnswerStringID": "LA33-6",
+                            "DisplayText": "Yes",
+                            "SequenceNo": 1,
+                            "Score": null
+                        },
+                        {
+                            "AnswerStringID": "LA32-8",
+                            "DisplayText": "No",
+                            "SequenceNo": 2,
+                            "Score": null
+                        }
+                    ],
+                    "contexts": [
+                        {
+                            "context": "95403-2",
+                            "LinkType": "NORMATIVE"
+                        }
+                    ]
+                }
+            ],
+            [
+                {
+                    "AnswerListId": "LL4256-5",
+                    "AnswerListName": "No (0) | Yes (1)",
+                    "answers": [
+                        {
+                            "AnswerStringID": "LA32-8",
+                            "DisplayText": "No",
+                            "SequenceNo": 1,
+                            "Score": 0
+                        },
+                        {
+                            "AnswerStringID": "LA33-6",
+                            "DisplayText": "Yes",
+                            "SequenceNo": 2,
+                            "Score": 1
+                        }
+                    ],
+                    "contexts": [
+                        {
+                            "context": null,
+                            "LinkType": "NORMATIVE"
+                        }
+                    ]
+                },
+                {
+                    "AnswerListId": "LL6611-9",
+                    "AnswerListName": "Symptom Presence MDS v1.19.1",
+                    "answers": [
+                        {
+                            "AnswerStringID": "LA32-8",
+                            "DisplayText": "No",
+                            "SequenceNo": 1,
+                            "Score": null
+                        },
+                        {
+                            "AnswerStringID": "LA33-6",
+                            "DisplayText": "Yes",
+                            "SequenceNo": 2,
+                            "Score": null
+                        }
+                    ],
+                    "contexts": [
+                        {
+                            "context": "104552-5",
+                            "LinkType": "NORMATIVE"
+                        },
+                        {
+                            "context": "104554-1",
+                            "LinkType": "NORMATIVE"
+                        },
+                        {
+                            "context": "104606-9",
+                            "LinkType": "NORMATIVE"
+                        },
+                        {
+                            "context": "104607-7",
+                            "LinkType": "NORMATIVE"
+                        },
+                        {
+                            "context": "104608-5",
+                            "LinkType": "NORMATIVE"
+                        },
+                        {
+                            "context": "104609-3",
+                            "LinkType": "NORMATIVE"
+                        }
+                    ]
+                }
+            ],
+            [
+                {
+                    "AnswerListId": "LL654-5",
+                    "AnswerListName": "MDSv3_D0200A2",
+                    "answers": [
+                        {
+                            "AnswerStringID": "LA10997-7",
+                            "DisplayText": "Never or 1 day",
+                            "SequenceNo": 1,
+                            "Score": null
+                        },
+                        {
+                            "AnswerStringID": "LA10998-5",
+                            "DisplayText": "2-6 days (several days)",
+                            "SequenceNo": 2,
+                            "Score": null
+                        },
+                        {
+                            "AnswerStringID": "LA10999-3",
+                            "DisplayText": "7-11 days (half or more of the days)",
+                            "SequenceNo": 3,
+                            "Score": null
+                        },
+                        {
+                            "AnswerStringID": "LA11000-9",
+                            "DisplayText": "12-14 days (nearly every day)",
+                            "SequenceNo": 4,
+                            "Score": null
+                        }
+                    ],
+                    "contexts": [
+                        {
+                            "context": null,
+                            "LinkType": "NORMATIVE"
+                        }
+                    ]
+                }
+            ],
+            [
+                {
+                    "AnswerListId": "LL654-5",
+                    "AnswerListName": "MDSv3_D0200A2",
+                    "answers": [
+                        {
+                            "AnswerStringID": "LA10997-7",
+                            "DisplayText": "Never or 1 day",
+                            "SequenceNo": 1,
+                            "Score": null
+                        },
+                        {
+                            "AnswerStringID": "LA10998-5",
+                            "DisplayText": "2-6 days (several days)",
+                            "SequenceNo": 2,
+                            "Score": null
+                        },
+                        {
+                            "AnswerStringID": "LA10999-3",
+                            "DisplayText": "7-11 days (half or more of the days)",
+                            "SequenceNo": 3,
+                            "Score": null
+                        },
+                        {
+                            "AnswerStringID": "LA11000-9",
+                            "DisplayText": "12-14 days (nearly every day)",
+                            "SequenceNo": 4,
+                            "Score": null
+                        }
+                    ],
+                    "contexts": [
+                        {
+                            "context": null,
+                            "LinkType": "NORMATIVE"
+                        }
+                    ]
+                }
+            ],
+            [
+                {
+                    "AnswerListId": "LL6360-3",
+                    "AnswerListName": "Symptom Presence (MDS)",
+                    "answers": [
+                        {
+                            "AnswerStringID": "LA33719-8",
+                            "DisplayText": "No (enter 0 in column 2)",
+                            "SequenceNo": 1,
+                            "Score": null
+                        },
+                        {
+                            "AnswerStringID": "LA33720-6",
+                            "DisplayText": "Yes (enter 0-3 in column 2)",
+                            "SequenceNo": 2,
+                            "Score": null
+                        },
+                        {
+                            "AnswerStringID": "LA33753-7",
+                            "DisplayText": "No response (leave column 2 blank)",
+                            "SequenceNo": 3,
+                            "Score": null
+                        }
+                    ],
+                    "contexts": [
+                        {
+                            "context": "100997-6",
+                            "LinkType": "NORMATIVE"
+                        }
+                    ]
+                },
+                {
+                    "AnswerListId": "LL653-7",
+                    "AnswerListName": "MDSv3_D0200A1",
+                    "answers": [
+                        {
+                            "AnswerStringID": "LA32-8",
+                            "DisplayText": "No",
+                            "SequenceNo": 1,
+                            "Score": null
+                        },
+                        {
+                            "AnswerStringID": "LA33-6",
+                            "DisplayText": "Yes",
+                            "SequenceNo": 2,
+                            "Score": null
+                        },
+                        {
+                            "AnswerStringID": "LA10996-9",
+                            "DisplayText": "No response",
+                            "SequenceNo": 3,
+                            "Score": null
+                        }
+                    ],
+                    "contexts": [
+                        {
+                            "context": null,
+                            "LinkType": "NORMATIVE"
+                        }
+                    ]
+                }
+            ]
+        ]
+    },
+    [
+        [
+            "Little interest or pleasure in doing things in last 2 weeks"
+        ],
+        [
+            "Little interest or pleasure in doing things in last 2 weeks [Reported.PHQ]"
+        ],
+        [
+            "Little interest or pleasure in doing things in last 2 weeks Caregiver [Reported.PHQ]"
+        ],
+        [
+            "Little interest or pleasure in doing things in last 2 weeks.presence [Observed PHQ-9 CMS]"
+        ],
+        [
+            "Little interest or pleasure in doing things in last 2 weeks.frequency [Reported PHQ-9 CMS]"
+        ],
+        [
+            "Little interest or pleasure in doing things in last 2 weeks.frequency [Observed PHQ-9 CMS]"
+        ],
+        [
+            "Little interest or pleasure in doing things in last 2 weeks.presence [Reported PHQ-9 CMS]"
+        ]
+    ]
+]

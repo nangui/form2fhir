@@ -1,0 +1,119 @@
+[
+    96,
+    [
+        "115653-8",
+        "103209-3",
+        "2710-2",
+        "44612-0",
+        "71844-5",
+        "71851-0",
+        "8844-3"
+    ],
+    {
+        "datatype": [
+            "CNE",
+            "REAL",
+            "REAL",
+            "REAL",
+            "REAL",
+            "REAL",
+            "REAL"
+        ],
+        "units": [
+            null,
+            [
+                {
+                    "unit": "%"
+                }
+            ],
+            [
+                {
+                    "unit": "%"
+                }
+            ],
+            [
+                {
+                    "unit": "%"
+                }
+            ],
+            [
+                {
+                    "unit": "%"
+                }
+            ],
+            [
+                {
+                    "unit": "%"
+                }
+            ],
+            [
+                {
+                    "unit": "%"
+                }
+            ]
+        ],
+        "AnswerLists": [
+            [
+                {
+                    "AnswerListId": "LL7614-2",
+                    "AnswerListName": "Oxygen saturation",
+                    "answers": [
+                        {
+                            "AnswerStringID": "LA37220-3",
+                            "DisplayText": "O2 saturation <90% even with supplemental oxygen",
+                            "SequenceNo": 1,
+                            "Score": 0
+                        },
+                        {
+                            "AnswerStringID": "LA37221-1",
+                            "DisplayText": "Needs oxygen to maintain O2 saturation >90%",
+                            "SequenceNo": 2,
+                            "Score": 1
+                        },
+                        {
+                            "AnswerStringID": "LA37222-9",
+                            "DisplayText": "Able to maintain O2 saturation >92% on room air",
+                            "SequenceNo": 3,
+                            "Score": 2
+                        }
+                    ],
+                    "contexts": [
+                        {
+                            "context": null,
+                            "LinkType": "EXAMPLE"
+                        }
+                    ]
+                }
+            ],
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        ]
+    },
+    [
+        [
+            "Oxygen saturation"
+        ],
+        [
+            "Mean oxygen saturation"
+        ],
+        [
+            "Deprecated Oxygen saturation in Capillary blood by Oximetry"
+        ],
+        [
+            "Deprecated Oxygen saturation (Episode maximum) in Capillary blood Oximetry"
+        ],
+        [
+            "Oxygen saturation [Pure mass fraction] Calculated from oxygen partial pressure in Blood"
+        ],
+        [
+            "Oxygen saturation [Pure mass fraction] in Capillary blood"
+        ],
+        [
+            "Mid right atrium Oxygen saturation"
+        ]
+    ]
+]
