@@ -25,3 +25,6 @@ logs
 
 # Claude Code local settings
 settings.local.json
+
+# Playwright MCP screenshots and snapshots
+.playwright-mcp

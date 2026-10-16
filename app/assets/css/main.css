@@ -1,2 +1,176 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+
+/*
+ * "Clinical lab notebook": warm paper neutrals, one deep surgical-teal accent,
+ * a serif display face for headings and mono for anything machine-produced.
+ */
+@theme static {
+  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --font-display: 'Instrument Serif', Georgia, serif;
+
+  --color-clinic-50: #f0f8f7;
+  --color-clinic-100: #d9efec;
+  --color-clinic-200: #b4ded9;
+  --color-clinic-300: #82c6bf;
+  --color-clinic-400: #4fa89f;
+  --color-clinic-500: #2f8c84;
+  --color-clinic-600: #22706a;
+  --color-clinic-700: #1d5a56;
+  --color-clinic-800: #1a4946;
+  --color-clinic-900: #183d3b;
+  --color-clinic-950: #082322;
+}
+
+:root {
+  --ui-radius: 0.375rem;
+  --ui-primary: var(--ui-color-primary-600);
+  /* Shade 500 (the default) fails WCAG AA for text on light backgrounds. */
+  --ui-success: var(--ui-color-success-700);
+  --ui-warning: var(--ui-color-warning-700);
+  --ui-error: var(--ui-color-error-600);
+  /* Graph-paper lines, like a clinical chart. */
+  --grid-line: color-mix(in oklab, var(--ui-color-primary-600) 7%, transparent);
+}
+
+.dark {
+  --ui-primary: var(--ui-color-primary-300);
+  --ui-success: var(--ui-color-success-400);
+  --ui-warning: var(--ui-color-warning-400);
+  --ui-error: var(--ui-color-error-400);
+  --grid-line: color-mix(in oklab, var(--ui-color-primary-300) 6%, transparent);
+}
+
+body {
+  background-color: var(--ui-bg);
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* JSON syntax colors (see app/utils/json-tokens.ts). */
+.json-key { color: var(--ui-color-primary-700); }
+.json-string { color: var(--ui-color-neutral-700); }
+.json-number, .json-literal { color: var(--ui-color-warning-700); }
+.json-punct { color: var(--ui-text-dimmed); }
+.dark .json-key { color: var(--ui-color-primary-300); }
+.dark .json-string { color: var(--ui-color-neutral-200); }
+.dark .json-number, .dark .json-literal { color: var(--ui-color-warning-300); }
+
+/* LHC-Forms preview: always a white "paper sheet", in the app's fonts and accent. */
+.lhc-preview {
+  color-scheme: light;
+  background: white;
+  color: var(--ui-color-neutral-900);
+}
+
+.lhc-preview .lhc-form,
+.lhc-preview .lhc-form * {
+  font-family: var(--font-sans);
+}
+
+.lhc-preview .lhc-form-title {
+  background: var(--ui-color-primary-700);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  letter-spacing: 0.01em;
+}
+
+/* LHC's own selector, prefixed: its stylesheet loads after ours (at runtime), so ours must be more specific. */
+.lhc-preview .lhc-form .lhc-item.lhc-datatype-TITLE .lhc-item-display {
+  background-color: var(--ui-color-primary-50);
+  border-radius: 0.375rem;
+}
+
+.lhc-preview .lhc-active-row {
+  background: color-mix(in oklab, var(--ui-color-primary-100) 45%, transparent);
+}
+
+/* Answer fields: LHC autocompleters restyled as modern selects. */
+.lhc-preview .lhc-form input.ansList {
+  height: 2.25rem;
+  padding: 0 2.25rem 0 0.75rem;
+  border: 1px solid var(--ui-color-neutral-300);
+  border-radius: 0.5rem;
+  /* Chevron stroke = neutral-500 (CSS variables can't reach inside a data URI). */
+  background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2378716c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 0.75rem center / 1rem;
+  box-shadow: 0 1px 2px color-mix(in oklab, var(--ui-color-neutral-900) 5%, transparent);
+  font-size: 0.875rem;
+  color: var(--ui-color-neutral-900);
+  transition: border-color 150ms, box-shadow 150ms;
+}
+
+.lhc-preview .lhc-form input.ansList::placeholder {
+  color: var(--ui-color-neutral-400);
+}
+
+.lhc-preview .lhc-form input.ansList:hover {
+  border-color: var(--ui-color-neutral-400);
+}
+
+.lhc-preview .lhc-form input.ansList:focus {
+  outline: none;
+  background-color: white;
+  border-color: var(--ui-color-primary-600);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--ui-color-primary-500) 22%, transparent);
+}
+
+/* LHC fixes row heights for its 28px inputs; let the taller field breathe. */
+.lhc-preview lhc-item-choice-autocomplete,
+.lhc-preview lhc-autocomplete > div,
+.lhc-preview lhc-item-choice-autocomplete > div {
+  height: auto;
+}
+
+/* The options popover is appended to <body>, outside .lhc-preview. Always light, like the sheet. */
+#lhc-tools-searchResults #completionOptionsScroller {
+  box-sizing: border-box;
+  /* Same width as the focused field (set by QuestionnairePreview), floating 6px below it. */
+  width: var(--lhc-field-width, 16rem);
+  margin-top: 0.375rem;
+  padding: 0.25rem;
+  border: 1px solid var(--ui-color-neutral-200);
+  border-radius: 0.5rem;
+  background: white;
+  box-shadow: 0 12px 32px -12px color-mix(in oklab, var(--ui-color-neutral-900) 28%, transparent);
+}
+
+#lhc-tools-searchResults .auto_complete {
+  background: transparent;
+}
+
+#lhc-tools-searchResults li {
+  padding: 0.5rem 0.75rem;
+  border: 0;
+  border-radius: 0.375rem;
+  font: 0.875rem/1.25 var(--font-sans);
+  color: var(--ui-color-neutral-900);
+  cursor: pointer;
+}
+
+#lhc-tools-searchResults li:hover,
+#lhc-tools-searchResults li.selected {
+  background: var(--ui-color-primary-50);
+  color: var(--ui-color-primary-800);
+}
+
+#lhc-tools-searchResults .listNum {
+  display: none;
+}
+
+/* The one memorable moment: the validation stamp lands once when a run passes. */
+@keyframes stamp {
+  0% { opacity: 0; transform: rotate(-4deg) scale(1.6); }
+  60% { opacity: 1; transform: rotate(-4deg) scale(0.96); }
+  100% { opacity: 1; transform: rotate(-4deg) scale(1); }
+}
+
+.stamp-in {
+  animation: stamp 420ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stamp-in { animation: none; transform: rotate(-4deg); }
+}

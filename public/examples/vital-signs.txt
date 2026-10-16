@@ -1,0 +1,19 @@
+VITAL SIGNS INTAKE
+To be completed by nursing staff at check-in.
+
+Date and time of measurement: ____________
+
+Body temperature: ______ °C
+Heart rate: ______ beats/min
+Respiratory rate: ______ breaths/min
+Blood pressure (seated): ______ / ______ mmHg (systolic / diastolic)
+Oxygen saturation (SpO2): ______ %
+Body weight: ______ kg
+Body height: ______ cm
+
+Pain severity (0 = no pain, 10 = worst imaginable pain): ______
+
+Is the patient currently using supplemental oxygen?  ☐ Yes  ☐ No
+If yes, oxygen flow rate: ______ L/min
+
+Notes: ____________________________________________

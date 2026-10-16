@@ -1,0 +1,85 @@
+<!doctype html>
+<!-- Source of public/examples/pre-visit-intake.pdf. Written for Form2FHIR (blank demo form, no real data).
+     Rebuild: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --no-pdf-header-footer \
+       --print-to-pdf=public/examples/pre-visit-intake.pdf eval/forms/pre-visit-intake.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pre-Visit Health Questionnaire</title>
+<style>
+  @page { size: A4; margin: 16mm 18mm; }
+  body { font: 10.5pt/1.45 Georgia, 'Times New Roman', serif; color: #1c1917; }
+  h1 { font-size: 18pt; margin: 0 0 2pt; letter-spacing: 0.01em; }
+  .sub { color: #57534e; margin: 0 0 12pt; font-size: 9.5pt; }
+  h2 { font: 600 9pt/1 Helvetica, Arial, sans-serif; text-transform: uppercase; letter-spacing: 0.08em;
+       border-bottom: 1.2pt solid #1c1917; padding-bottom: 3pt; margin: 14pt 0 6pt; }
+  .row { display: flex; gap: 16pt; margin: 5pt 0; align-items: baseline; }
+  .field { flex: 1; display: flex; gap: 6pt; align-items: baseline; }
+  .line { flex: 1; border-bottom: 0.6pt solid #78716c; height: 12pt; }
+  .q { margin: 7pt 0 3pt; }
+  .opts { display: flex; flex-wrap: wrap; gap: 4pt 16pt; margin-left: 10pt; }
+  .box { display: inline-block; width: 8pt; height: 8pt; border: 0.8pt solid #1c1917; margin-right: 4pt; vertical-align: -1pt; }
+  .scale { display: flex; gap: 6pt; margin-left: 10pt; }
+  .scale span { width: 16pt; text-align: center; border: 0.6pt solid #78716c; border-radius: 2pt; font-size: 9pt; }
+  .lines .line { margin: 9pt 0 0 10pt; flex: none; }
+  .foot { margin-top: 18pt; font-size: 8.5pt; color: #57534e; border-top: 0.6pt solid #a8a29e; padding-top: 6pt; }
+</style>
+</head>
+<body>
+  <h1>Pre-Visit Health Questionnaire</h1>
+  <p class="sub">Please complete before your appointment. Answer as best you can; your care team will review it with you.</p>
+
+  <h2>About you</h2>
+  <div class="row">
+    <div class="field">Full name <span class="line"></span></div>
+    <div class="field" style="flex:0.6">Date of birth <span class="line"></span></div>
+  </div>
+  <div class="q">Reason for today's visit</div>
+  <div class="lines"><div class="line"></div><div class="line"></div></div>
+
+  <h2>Allergies</h2>
+  <div class="q">Are you allergic to any medications?</div>
+  <div class="opts"><span><span class="box"></span>Yes</span><span><span class="box"></span>No</span><span><span class="box"></span>Not sure</span></div>
+  <div class="q">If yes, list each medication and the reaction you had</div>
+  <div class="lines"><div class="line"></div><div class="line"></div></div>
+
+  <h2>Medications</h2>
+  <div class="q">List all medications you currently take, including over-the-counter drugs and supplements</div>
+  <div class="lines"><div class="line"></div><div class="line"></div><div class="line"></div></div>
+
+  <h2>Lifestyle</h2>
+  <div class="q">Tobacco smoking status</div>
+  <div class="opts">
+    <span><span class="box"></span>Never smoker</span>
+    <span><span class="box"></span>Former smoker</span>
+    <span><span class="box"></span>Current every day smoker</span>
+    <span><span class="box"></span>Current some day smoker</span>
+  </div>
+  <div class="q">How often do you have a drink containing alcohol?</div>
+  <div class="opts">
+    <span><span class="box"></span>Never</span>
+    <span><span class="box"></span>Monthly or less</span>
+    <span><span class="box"></span>2–4 times a month</span>
+    <span><span class="box"></span>2–3 times a week</span>
+    <span><span class="box"></span>4 or more times a week</span>
+  </div>
+
+  <h2>Your health today</h2>
+  <div class="q">In general, would you say your health is:</div>
+  <div class="opts">
+    <span><span class="box"></span>Excellent</span>
+    <span><span class="box"></span>Very good</span>
+    <span><span class="box"></span>Good</span>
+    <span><span class="box"></span>Fair</span>
+    <span><span class="box"></span>Poor</span>
+  </div>
+  <div class="q">How would you rate your pain right now? (0 = no pain, 10 = worst imaginable pain)</div>
+  <div class="scale"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
+
+  <div class="row" style="margin-top:16pt">
+    <div class="field" style="flex:0.5">Date completed <span class="line"></span></div>
+  </div>
+
+  <p class="foot">Sample blank form written for the Form2FHIR demo. Contains no patient data. Free to reuse (CC0).</p>
+</body>
+</html>
