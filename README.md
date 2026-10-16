@@ -80,3 +80,7 @@ How to read it:
 - FHIR® is the registered trademark of HL7 and is used with the permission of HL7.
 - Questionnaire preview by [LHC-Forms](https://lhncbc.github.io/lforms/) (U.S. National Library of Medicine). Validation by the public [HAPI FHIR](https://hapi.fhir.org/) test server.
 - Built with the [Claude API](https://platform.claude.com/).
+
+## License
+
+Code: [MIT](LICENSE). The forms used as examples and eval fixtures keep their own licenses, listed in `eval/fixtures.json` (PHQ-9: Pfizer, free to reproduce; the French sports questionnaire: an official text published in the Journal officiel; the other forms were written for this project and are CC0).
