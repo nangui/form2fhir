@@ -1,0 +1,387 @@
+{
+  "questionnaire": {
+    "resourceType": "Questionnaire",
+    "status": "draft",
+    "name": "PreVisitHealthQuestionnaire",
+    "title": "Pre-Visit Health Questionnaire",
+    "item": [
+      {
+        "linkId": "intro",
+        "type": "display",
+        "text": "Please complete before your appointment. Answer as best you can; your care team will review it with you."
+      },
+      {
+        "linkId": "about",
+        "type": "group",
+        "text": "ABOUT YOU",
+        "item": [
+          {
+            "linkId": "name",
+            "type": "string",
+            "text": "Full name"
+          },
+          {
+            "linkId": "dob",
+            "type": "date",
+            "text": "Date of birth"
+          },
+          {
+            "linkId": "reason",
+            "type": "text",
+            "text": "Reason for today's visit",
+            "code": [
+              {
+                "system": "http://loinc.org",
+                "code": "29298-7",
+                "display": "Reason for visit"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "linkId": "allergies",
+        "type": "group",
+        "text": "ALLERGIES",
+        "item": [
+          {
+            "linkId": "allergy-yn",
+            "type": "choice",
+            "text": "Are you allergic to any medications?",
+            "answerOption": [
+              {
+                "valueString": "Yes"
+              },
+              {
+                "valueString": "No"
+              },
+              {
+                "valueString": "Not sure"
+              }
+            ]
+          },
+          {
+            "linkId": "allergy-list",
+            "type": "text",
+            "text": "If yes, list each medication and the reaction you had",
+            "code": [
+              {
+                "system": "http://loinc.org",
+                "code": "52473-6",
+                "display": "Allergy or cause of reaction"
+              }
+            ],
+            "enableWhen": [
+              {
+                "question": "allergy-yn",
+                "operator": "=",
+                "answerString": "Yes"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "linkId": "meds",
+        "type": "group",
+        "text": "MEDICATIONS",
+        "item": [
+          {
+            "linkId": "meds-list",
+            "type": "text",
+            "text": "List all medications you currently take, including over-the-counter drugs and supplements"
+          }
+        ]
+      },
+      {
+        "linkId": "lifestyle",
+        "type": "group",
+        "text": "LIFESTYLE",
+        "item": [
+          {
+            "linkId": "smoking",
+            "type": "choice",
+            "text": "Tobacco smoking status",
+            "code": [
+              {
+                "system": "http://loinc.org",
+                "code": "72166-2",
+                "display": "Tobacco smoking status"
+              }
+            ],
+            "answerOption": [
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA18978-9",
+                  "display": "Never smoker"
+                }
+              },
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA15920-4",
+                  "display": "Former smoker"
+                }
+              },
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA18976-3",
+                  "display": "Current every day smoker"
+                }
+              },
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA18977-1",
+                  "display": "Current some day smoker"
+                }
+              }
+            ]
+          },
+          {
+            "linkId": "alcohol",
+            "type": "choice",
+            "text": "How often do you have a drink containing alcohol?",
+            "code": [
+              {
+                "system": "http://loinc.org",
+                "code": "68518-0",
+                "display": "How often do you have a drink containing alcohol"
+              }
+            ],
+            "answerOption": [
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA6270-8",
+                  "display": "Never"
+                },
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+                    "valueDecimal": 0
+                  }
+                ]
+              },
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA18926-8",
+                  "display": "Monthly or less"
+                },
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+                    "valueDecimal": 1
+                  }
+                ]
+              },
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA18927-6",
+                  "display": "2-4 times a month"
+                },
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+                    "valueDecimal": 2
+                  }
+                ]
+              },
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA18928-4",
+                  "display": "2-3 times a week"
+                },
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+                    "valueDecimal": 3
+                  }
+                ]
+              },
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA18929-2",
+                  "display": "4 or more times a week"
+                },
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+                    "valueDecimal": 4
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "linkId": "health",
+        "type": "group",
+        "text": "YOUR HEALTH TODAY",
+        "item": [
+          {
+            "linkId": "general-health",
+            "type": "choice",
+            "text": "In general, would you say your health is:",
+            "answerOption": [
+              {
+                "valueString": "Excellent"
+              },
+              {
+                "valueString": "Very good"
+              },
+              {
+                "valueString": "Good"
+              },
+              {
+                "valueString": "Fair"
+              },
+              {
+                "valueString": "Poor"
+              }
+            ]
+          },
+          {
+            "linkId": "pain",
+            "type": "integer",
+            "text": "How would you rate your pain right now? (0 = no pain, 10 = worst imaginable pain)",
+            "code": [
+              {
+                "system": "http://loinc.org",
+                "code": "72514-3",
+                "display": "Pain severity - 0-10 verbal numeric rating [Score] - Reported"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "linkId": "date-completed",
+        "type": "date",
+        "text": "Date completed",
+        "code": [
+          {
+            "system": "http://loinc.org",
+            "code": "30947-6",
+            "display": "Date form completed"
+          }
+        ]
+      }
+    ]
+  },
+  "valid": true,
+  "issues": [
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[1].item[2].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[2].item[1].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[4].item[0].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[4].item[0].answerOption[0].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[4].item[0].answerOption[1].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[4].item[0].answerOption[2].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[4].item[0].answerOption[3].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[4].item[1].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[4].item[1].answerOption[0].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[4].item[1].answerOption[1].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[4].item[1].answerOption[2].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[4].item[1].answerOption[3].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[4].item[1].answerOption[4].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[5].item[1].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[6].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)",
+      "location": "Questionnaire"
+    }
+  ],
+  "iterations": 2,
+  "model": "claude-sonnet-5-5",
+  "usage": {
+    "inputTokens": 6,
+    "outputTokens": 1977,
+    "cacheReadTokens": 6462,
+    "cacheWriteTokens": 5542
+  },
+  "durationMs": 13230
+}

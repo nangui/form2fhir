@@ -1,0 +1,312 @@
+{
+  "questionnaire": {
+    "resourceType": "Questionnaire",
+    "status": "draft",
+    "name": "VitalSignsIntake",
+    "title": "Vital Signs Intake",
+    "item": [
+      {
+        "linkId": "instr",
+        "type": "display",
+        "text": "To be completed by nursing staff at check-in."
+      },
+      {
+        "linkId": "vitals-datetime",
+        "type": "dateTime",
+        "text": "Date and time of measurement"
+      },
+      {
+        "linkId": "vitals-temp",
+        "type": "decimal",
+        "code": [
+          {
+            "system": "http://loinc.org",
+            "code": "8310-5",
+            "display": "Body temperature"
+          }
+        ],
+        "text": "Body temperature",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+            "valueCoding": {
+              "system": "http://unitsofmeasure.org",
+              "code": "Cel",
+              "display": "Cel"
+            }
+          }
+        ]
+      },
+      {
+        "linkId": "vitals-hr",
+        "type": "decimal",
+        "code": [
+          {
+            "system": "http://loinc.org",
+            "code": "8867-4",
+            "display": "Heart rate"
+          }
+        ],
+        "text": "Heart rate",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+            "valueCoding": {
+              "system": "http://unitsofmeasure.org",
+              "code": "{beats}/min",
+              "display": "beats/min"
+            }
+          }
+        ]
+      },
+      {
+        "linkId": "vitals-rr",
+        "type": "decimal",
+        "code": [
+          {
+            "system": "http://loinc.org",
+            "code": "9303-9",
+            "display": "Respiratory rate --resting"
+          }
+        ],
+        "text": "Respiratory rate",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+            "valueCoding": {
+              "system": "http://unitsofmeasure.org",
+              "code": "{breaths}/min",
+              "display": "breaths/min"
+            }
+          }
+        ]
+      },
+      {
+        "linkId": "vitals-sbp",
+        "type": "decimal",
+        "code": [
+          {
+            "system": "http://loinc.org",
+            "code": "8480-6",
+            "display": "Systolic blood pressure"
+          }
+        ],
+        "text": "Blood pressure (seated): systolic",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+            "valueCoding": {
+              "system": "http://unitsofmeasure.org",
+              "code": "mm[Hg]",
+              "display": "mmHg"
+            }
+          }
+        ]
+      },
+      {
+        "linkId": "vitals-dbp",
+        "type": "decimal",
+        "code": [
+          {
+            "system": "http://loinc.org",
+            "code": "8462-4",
+            "display": "Diastolic blood pressure"
+          }
+        ],
+        "text": "Blood pressure (seated): diastolic",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+            "valueCoding": {
+              "system": "http://unitsofmeasure.org",
+              "code": "mm[Hg]",
+              "display": "mmHg"
+            }
+          }
+        ]
+      },
+      {
+        "linkId": "vitals-spo2",
+        "type": "decimal",
+        "code": [
+          {
+            "system": "http://loinc.org",
+            "code": "59408-5",
+            "display": "Oxygen saturation in Arterial blood by Pulse oximetry"
+          }
+        ],
+        "text": "Oxygen saturation (SpO2)",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+            "valueCoding": {
+              "system": "http://unitsofmeasure.org",
+              "code": "%",
+              "display": "%"
+            }
+          }
+        ]
+      },
+      {
+        "linkId": "vitals-weight",
+        "type": "decimal",
+        "text": "Body weight",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+            "valueCoding": {
+              "system": "http://unitsofmeasure.org",
+              "code": "kg",
+              "display": "kg"
+            }
+          }
+        ]
+      },
+      {
+        "linkId": "vitals-height",
+        "type": "decimal",
+        "code": [
+          {
+            "system": "http://loinc.org",
+            "code": "8302-2",
+            "display": "Body height"
+          }
+        ],
+        "text": "Body height",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+            "valueCoding": {
+              "system": "http://unitsofmeasure.org",
+              "code": "cm",
+              "display": "cm"
+            }
+          }
+        ]
+      },
+      {
+        "linkId": "vitals-pain",
+        "type": "integer",
+        "code": [
+          {
+            "system": "http://loinc.org",
+            "code": "72514-3",
+            "display": "Pain severity - 0-10 verbal numeric rating [Score] - Reported"
+          }
+        ],
+        "text": "Pain severity (0 = no pain, 10 = worst imaginable pain)"
+      },
+      {
+        "linkId": "vitals-o2use",
+        "type": "boolean",
+        "text": "Is the patient currently using supplemental oxygen?"
+      },
+      {
+        "linkId": "vitals-o2flow",
+        "type": "decimal",
+        "code": [
+          {
+            "system": "http://loinc.org",
+            "code": "3151-8",
+            "display": "Inhaled oxygen flow rate"
+          }
+        ],
+        "text": "If yes, oxygen flow rate",
+        "enableWhen": [
+          {
+            "question": "vitals-o2use",
+            "operator": "=",
+            "answerBoolean": true
+          }
+        ],
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+            "valueCoding": {
+              "system": "http://unitsofmeasure.org",
+              "code": "L/min",
+              "display": "L/min"
+            }
+          }
+        ]
+      },
+      {
+        "linkId": "vitals-notes",
+        "type": "text",
+        "text": "Notes"
+      }
+    ]
+  },
+  "valid": true,
+  "issues": [
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[2].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[3].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[4].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[5].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[6].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[7].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[9].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[10].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[12].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)",
+      "location": "Questionnaire"
+    }
+  ],
+  "iterations": 2,
+  "model": "claude-sonnet-5-5",
+  "usage": {
+    "inputTokens": 6,
+    "outputTokens": 2087,
+    "cacheReadTokens": 2394,
+    "cacheWriteTokens": 7501
+  },
+  "durationMs": 13923
+}

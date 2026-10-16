@@ -111,6 +111,7 @@ export async function runAgent(
       valid: submission.validation.valid,
       issues: submission.validation.issues,
       iterations,
+      model: deps.model,
       usage,
       durationMs: Date.now() - startedAt
     }

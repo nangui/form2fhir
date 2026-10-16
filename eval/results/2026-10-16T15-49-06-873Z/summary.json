@@ -1,0 +1,91 @@
+{
+  "url": "http://localhost:3917",
+  "model": "claude-sonnet-5-5",
+  "rows": [
+    {
+      "id": "vital-signs",
+      "name": "Vital Signs Intake",
+      "language": "en",
+      "valid": true,
+      "iterations": 2,
+      "coded": 9,
+      "total": 13,
+      "durationMs": 13923,
+      "usage": {
+        "inputTokens": 6,
+        "outputTokens": 2087,
+        "cacheReadTokens": 2394,
+        "cacheWriteTokens": 7501
+      },
+      "costUsd": 0.040113300000000005
+    },
+    {
+      "id": "phq-9",
+      "name": "PHQ-9",
+      "language": "en",
+      "valid": true,
+      "iterations": 2,
+      "coded": 10,
+      "total": 10,
+      "durationMs": 26219,
+      "usage": {
+        "inputTokens": 6,
+        "outputTokens": 5050,
+        "cacheReadTokens": 4673,
+        "cacheWriteTokens": 9497
+      },
+      "costUsd": 0.07518910000000001
+    },
+    {
+      "id": "pre-visit-intake",
+      "name": "Pre-Visit Health Questionnaire (PDF)",
+      "language": "en",
+      "valid": true,
+      "iterations": 2,
+      "coded": 5,
+      "total": 11,
+      "durationMs": 14398,
+      "usage": {
+        "inputTokens": 6,
+        "outputTokens": 1990,
+        "cacheReadTokens": 6168,
+        "cacheWriteTokens": 4908
+      },
+      "costUsd": 0.0334156
+    },
+    {
+      "id": "sportif-mineur",
+      "name": "Questionnaire relatif à l'état de santé du sportif mineur (Journal officiel, PDF)",
+      "language": "fr",
+      "valid": true,
+      "iterations": 2,
+      "coded": 0,
+      "total": 26,
+      "durationMs": 13075,
+      "usage": {
+        "inputTokens": 6,
+        "outputTokens": 2050,
+        "cacheReadTokens": 10044,
+        "cacheWriteTokens": 6519
+      },
+      "costUsd": 0.0388183
+    },
+    {
+      "id": "bilan-diabete",
+      "name": "Bilan annuel de suivi — Diabète de type 2 (PDF, 3 pages)",
+      "language": "fr",
+      "valid": true,
+      "iterations": 2,
+      "coded": 8,
+      "total": 56,
+      "durationMs": 35876,
+      "usage": {
+        "inputTokens": 6,
+        "outputTokens": 6747,
+        "cacheReadTokens": 11253,
+        "cacheWriteTokens": 13873
+      },
+      "costUsd": 0.10441510000000001
+    }
+  ]
+}

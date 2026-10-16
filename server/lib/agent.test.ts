@@ -69,7 +69,7 @@ describe('runAgent', () => {
 
     const result = await run()
 
-    expect(result).toMatchObject({ valid: true, questionnaire: QUESTIONNAIRE, issues: [WARNING], iterations: 2 })
+    expect(result).toMatchObject({ valid: true, questionnaire: QUESTIONNAIRE, issues: [WARNING], iterations: 2, model: 'claude-sonnet-5-5' })
     expect(result.usage).toEqual({ inputTokens: 200, outputTokens: 100, cacheReadTokens: 20, cacheWriteTokens: 10 })
     expect(events.at(-1)).toEqual({ type: 'result', result })
     expect(steps(events)).toEqual([

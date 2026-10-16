@@ -7,7 +7,7 @@ Principle: **the model proposes, the validator decides.** Never mark output vali
 - `pnpm test` — Vitest (offline; uses `test/recordings`)
 - `pnpm test:live` — opt-in smoke tests hitting LOINC + HAPI (no Claude calls)
 - `pnpm typecheck` · `pnpm lint` · `pnpm build`
-- `node eval/run.ts [--url http://localhost:3000] [--fast]` — runs fixtures; COSTS API MONEY, ask first
+- `node eval/run.ts [--url http://localhost:3000] [--only id1,id2]` — runs `eval/fixtures.json` through the real API; COSTS API MONEY (~$0.35 for all 5 fixtures with Sonnet 5.5), ask first. To compare models, start the server with another `ANTHROPIC_MODEL`.
 
 ## Rules
 - Demo only: blank forms, never real patient data. Not a medical device, no clinical decision support.

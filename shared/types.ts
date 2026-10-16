@@ -32,6 +32,7 @@ export interface ConvertResult {
   issues: ValidationIssue[]
   /** Number of Claude calls used. */
   iterations: number
+  model: string
   usage: TokenUsage
   durationMs: number
 }
