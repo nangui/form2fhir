@@ -15,7 +15,8 @@ async function render() {
     lforms.Util.removeFormsFromPage?.(el)
     el.replaceChildren()
     // LHC-Forms mutates its input; give it a plain copy, not the reactive proxy.
-    await lforms.Util.addFormToPage(structuredClone(toRaw(props.questionnaire)), el, { fhirVersion: 'R4' })
+    // allowHTML: false is LHC's default today; set it explicitly so model-written text is never HTML.
+    await lforms.Util.addFormToPage(structuredClone(toRaw(props.questionnaire)), el, { fhirVersion: 'R4', allowHTML: false })
     state.value = 'ready'
   } catch {
     state.value = 'error'

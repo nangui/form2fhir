@@ -6,6 +6,18 @@ interface Window {
   count: number
 }
 
+/** IPv6 clients usually own a whole /64, so they are limited per /64 rather than per address. */
+export function clientKey(ip: string): string {
+  const mapped = ip.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/i)
+  if (mapped) return mapped[1]!
+  if (!ip.includes(':')) return ip
+  const [head = '', tail = ''] = ip.toLowerCase().split('::')
+  const left = head ? head.split(':') : []
+  const right = tail ? tail.split(':') : []
+  const groups = ip.includes('::') ? [...left, ...Array(8 - left.length - right.length).fill('0'), ...right] : left
+  return `${groups.slice(0, 4).map(g => g.replace(/^0+(?=.)/, '')).join(':')}::/64`
+}
+
 export type RateLimitDecision = { allowed: true } | { allowed: false, retryAfterSeconds: number }
 
 /**

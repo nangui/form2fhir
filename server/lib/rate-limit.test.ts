@@ -1,5 +1,18 @@
 import { describe, expect, it } from 'vitest'
-import { createRateLimiter } from './rate-limit'
+import { clientKey, createRateLimiter } from './rate-limit'
+
+describe('clientKey', () => {
+  it('keeps IPv4 addresses as they are', () => {
+    expect(clientKey('203.0.113.7')).toBe('203.0.113.7')
+    expect(clientKey('::ffff:203.0.113.7')).toBe('203.0.113.7')
+  })
+
+  it('groups IPv6 addresses by /64, so rotating within a network shares one quota', () => {
+    expect(clientKey('2001:db8:abcd:12:1::1')).toBe('2001:db8:abcd:12::/64')
+    expect(clientKey('2001:DB8:ABCD:12:ffff:ffff:ffff:ffff')).toBe('2001:db8:abcd:12::/64')
+    expect(clientKey('2001:db8::1')).toBe('2001:db8:0:0::/64')
+  })
+})
 
 const HOUR = 60 * 60 * 1000
 

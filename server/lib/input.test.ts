@@ -66,6 +66,14 @@ describe('parseFormInput', () => {
       .toBe('The PDF has 3 pages (max 2). Upload only the pages of the form.')
   })
 
+  it('counts pages in linear time, even on a crafted file built to slow the regex down', () => {
+    const crafted = Buffer.from(`%PDF-1.7\n${'/Type/Pages '.repeat(250_000)}`) // ~3 MB, no closing ">"
+    const start = performance.now()
+
+    expect(parseFormInput(file(crafted), { ...LIMITS, maxFileBytes: 4 * 1024 * 1024, maxPdfPages: 5 })).toMatchObject({ kind: 'pdf' })
+    expect(performance.now() - start).toBeLessThan(500)
+  })
+
   it('also reads the page tree count when page objects are hidden in compressed streams', () => {
     const compressed = Buffer.from('%PDF-1.7\n2 0 obj << /Type /Pages /Kids [] /Count 40 >> endobj\n3 0 obj << /Type /ObjStm /Filter /FlateDecode >> stream\n...\nendstream\n%%EOF')
 

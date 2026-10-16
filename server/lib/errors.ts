@@ -10,7 +10,7 @@ export class ServiceUnavailableError extends Error {
 
 /** The user's request is unusable (empty, too big, wrong file type). The message is shown to the user. */
 export class InputError extends Error {
-  constructor(message: string, readonly status: 400 | 411 | 413 | 415 | 429 = 400) {
+  constructor(message: string, readonly status: 400 | 403 | 411 | 413 | 415 | 429 = 400) {
     super(message)
     this.name = 'InputError'
   }

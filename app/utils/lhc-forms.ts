@@ -14,7 +14,7 @@ const SCRIPTS = [
 
 export interface LForms {
   Util: {
-    addFormToPage: (form: unknown, container: HTMLElement, options: { fhirVersion: 'R4' }) => Promise<unknown>
+    addFormToPage: (form: unknown, container: HTMLElement, options: { fhirVersion: 'R4', allowHTML: boolean }) => Promise<unknown>
     removeFormsFromPage?: (container: HTMLElement) => void
   }
 }

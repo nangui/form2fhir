@@ -5,6 +5,9 @@
         Demo only. Use blank forms — never real patient data. Not a medical device; no clinical decision support.
       </p>
       <p>
+        Form content is sent to Claude (Anthropic), the NLM Clinical Tables API and the public HAPI FHIR test server.
+      </p>
+      <p>
         This material contains content from
         <ULink
           to="https://loinc.org"

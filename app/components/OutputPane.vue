@@ -48,7 +48,20 @@ const tabs = computed(() => {
         :ui="{ list: 'overflow-x-auto', trigger: 'shrink-0', content: 'pt-4' }"
       >
         <template #preview>
-          <QuestionnairePreview :questionnaire="result.questionnaire" />
+          <!-- Only validated output is rendered: the server checks (e.g. no rendering-* extensions,
+               no answerValueSet) are what make it safe to hand to LHC-Forms. -->
+          <QuestionnairePreview
+            v-if="result.valid"
+            :questionnaire="result.questionnaire"
+          />
+          <UAlert
+            v-else
+            color="neutral"
+            variant="subtle"
+            icon="i-lucide-eye-off"
+            title="No preview for an invalid Questionnaire"
+            description="The JSON and the validation report show what still needs fixing."
+          />
         </template>
         <template #json>
           <JsonCode :value="result.questionnaire" />

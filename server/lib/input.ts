@@ -80,7 +80,9 @@ function sniffImage(data: Buffer): ImageMediaType | undefined {
 function countPdfPages(data: Buffer): number {
   const source = data.toString('latin1')
   const pageObjects = source.match(/\/Type\s*\/Page(?![a-z])/gi)?.length ?? 0
-  const treeCounts = [...source.matchAll(/\/Type\s*\/Pages\b[^>]*?\/Count\s+(\d+)|\/Count\s+(\d+)[^>]*?\/Type\s*\/Pages\b/g)]
+  // Bounded windows ({0,200}) keep this linear: an unbounded lazy scan is quadratic on a crafted
+  // file (3 MB of "/Type/Pages" without ">" froze the event loop for minutes).
+  const treeCounts = [...source.matchAll(/\/Type\s*\/Pages\b[^>]{0,200}?\/Count\s+(\d+)|\/Count\s+(\d+)[^>]{0,200}?\/Type\s*\/Pages\b/g)]
     .map(match => Number(match[1] ?? match[2]))
   return Math.max(pageObjects, ...treeCounts)
 }

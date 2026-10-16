@@ -257,6 +257,30 @@ describe('runAgent', () => {
     ])
   })
 
+  it('refuses a form whose token count exceeds the budget before any paid call', async () => {
+    const { deps, run } = setup([reply([submitCall()])], { countTokens: vi.fn(async () => 45_000) })
+
+    await expect(run()).rejects.toThrow('This form is too long for the demo (about 45,000 tokens, max 30,000). Try fewer pages.')
+    expect(deps.createMessage).not.toHaveBeenCalled()
+  })
+
+  it('caps the total number of LOINC searches per run', async () => {
+    const searchLoinc = vi.fn(async () => HEART_RATE)
+    const many = (n: number) => searchCall({ questions: Array.from({ length: n }, (_, i) => `term ${i}`) })
+    const { calls, run } = setup([
+      reply([many(25), many(25), many(25)]),
+      reply([submitCall()])
+    ], { searchLoinc })
+
+    await run()
+
+    expect(searchLoinc).toHaveBeenCalledTimes(2)
+    expect(lastToolResults(calls[1]!)[2]).toMatchObject({
+      is_error: true,
+      content: 'LOINC search budget used up (60 terms per run). Submit the Questionnaire with the codes you already have.'
+    })
+  })
+
   it('lets an unavailable external service end the run', async () => {
     const { run } = setup([reply([searchCall()])], {
       searchLoinc: vi.fn(async () => {

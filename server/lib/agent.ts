@@ -15,10 +15,17 @@ export interface AgentDeps {
   createMessage: (params: Params, options: { signal?: AbortSignal }) => Promise<Anthropic.Beta.BetaMessage>
   searchLoinc: (input: SearchLoincInput, signal?: AbortSignal) => Promise<LoincQueryResult[]>
   validate: (questionnaire: unknown, allowedCodes: ReadonlySet<string>, signal?: AbortSignal) => Promise<ValidationResult>
+  /** Token count of the form message (free endpoint), checked before any paid call. */
+  countTokens?: (messages: Anthropic.Beta.BetaMessageParam[], signal?: AbortSignal) => Promise<number>
 }
 
 const MAX_ITERATIONS = 4
 const MAX_TOKENS = 16_000
+// The form is resent on every iteration; this bounds the cost of a long PDF whose pages
+// our cheap page counter missed.
+const MAX_FORM_TOKENS = 30_000
+// search_loinc takes up to 25 terms per call, but the number of calls per turn is the model's.
+const MAX_SEARCH_TERMS = 60
 // Server-side refusal fallback (beta) is only accepted by these models (and their dated snapshots).
 const FALLBACK_MODEL_PREFIXES = ['claude-sonnet-5-5', 'claude-opus-5', 'claude-fable-5-1']
 
@@ -38,7 +45,14 @@ export async function runAgent(
   const messages: Anthropic.Beta.BetaMessageParam[] = [
     { role: 'user', content: [...toContentBlocks(input), { type: 'text', text: TASK_PROMPT }] }
   ]
+  if (deps.countTokens) {
+    const tokens = await deps.countTokens(messages, signal)
+    if (tokens > MAX_FORM_TOKENS) {
+      throw new AgentError(`This form is too long for the demo (about ${tokens.toLocaleString('en-US')} tokens, max ${MAX_FORM_TOKENS.toLocaleString('en-US')}). Try fewer pages.`)
+    }
+  }
   const allowedCodes = new Set<string>()
+  const searchBudget = { remaining: MAX_SEARCH_TERMS }
   const usage: TokenUsage = { inputTokens: 0, outputTokens: 0, cacheReadTokens: 0, cacheWriteTokens: 0 }
   const trace = createTrace(emit)
   let lastSubmission: { questionnaire: unknown, validation: ValidationResult } | undefined
@@ -67,7 +81,7 @@ export async function runAgent(
     const results: ToolResult[] = []
     // Searches first, so a submission in the same turn can use the codes they return.
     for (const toolUse of toolUses.filter(t => t.name !== 'submit_questionnaire')) {
-      const result = await runSearch(toolUse, deps, allowedCodes, trace, signal)
+      const result = await runSearch(toolUse, deps, allowedCodes, searchBudget, trace, signal)
       results.push(result)
       lastAction = result.is_error ? 'tool_error' : 'search'
     }
@@ -125,6 +139,7 @@ async function runSearch(
   toolUse: ToolUse,
   deps: AgentDeps,
   allowedCodes: Set<string>,
+  searchBudget: { remaining: number },
   trace: Trace,
   signal?: AbortSignal
 ): Promise<ToolResult> {
@@ -138,6 +153,10 @@ async function runSearch(
   }
 
   const count = (input.questions?.length ?? 0) + (input.panels?.length ?? 0)
+  if (count > searchBudget.remaining) {
+    return toolError(toolUse.id, `LOINC search budget used up (${MAX_SEARCH_TERMS} terms per run). Submit the Questionnaire with the codes you already have.`)
+  }
+  searchBudget.remaining -= count
   const results = await trace.run('search_loinc', `Searching LOINC ×${count}`, () => deps.searchLoinc(input, signal), found => ({
     label: `search_loinc ×${count}`,
     detail: `${found.filter(r => r.hits.length > 0).length} of ${count} terms matched`

@@ -5,7 +5,7 @@ import { type AppConfig, loadConfig } from '../lib/config'
 import { InputError } from '../lib/errors'
 import { parseFormInput } from '../lib/input'
 import { searchLoinc } from '../lib/loinc'
-import { createRateLimiter } from '../lib/rate-limit'
+import { clientKey, createRateLimiter } from '../lib/rate-limit'
 import { toUserError } from '../lib/user-error'
 import { validateQuestionnaire } from '../lib/validate'
 
@@ -20,6 +20,7 @@ export default defineEventHandler(async (event) => {
   const config = loadConfig()
   let input
   try {
+    checkSameSite(event)
     checkBodySize(event, config)
     input = parseFormInput(await readMultipartFormData(event), config)
     // Only requests that will reach Claude count against the limit.
@@ -48,7 +49,9 @@ export default defineEventHandler(async (event) => {
         model: config.model,
         createMessage: (params, options) => client.beta.messages.create(params, options),
         searchLoinc: (query, s) => searchLoinc(query, { baseUrl: config.loincSearchUrl, signal: s }),
-        validate: (q, codes, s) => validateQuestionnaire(q, codes, { baseUrl: config.validatorUrl, signal: s })
+        validate: (q, codes, s) => validateQuestionnaire(q, codes, { baseUrl: config.validatorUrl, signal: s }),
+        countTokens: async (messages, s) =>
+          (await client.beta.messages.countTokens({ model: config.model, messages }, { signal: s })).input_tokens
       }, emit, signal)
     } catch (error) {
       if (disconnected.signal.aborted) return
@@ -66,13 +69,26 @@ export default defineEventHandler(async (event) => {
 
 function checkRateLimit(event: Parameters<typeof getRequestIP>[0], config: AppConfig) {
   limiter ??= createRateLimiter({ perHour: config.rateLimitPerHour, perDay: config.rateLimitPerDay })
-  // On Vercel the platform sets x-forwarded-for; locally we fall back to the socket address.
+  // Vercel overwrites x-forwarded-for with the real client IP (client values are not forwarded,
+  // to prevent spoofing); locally we fall back to the socket address.
   const ip = getRequestIP(event, { xForwardedFor: true }) ?? 'unknown'
-  const decision = limiter.take(ip)
+  const decision = limiter.take(clientKey(ip))
   if (!decision.allowed) {
     setResponseHeader(event, 'retry-after', decision.retryAfterSeconds)
     const minutes = Math.ceil(decision.retryAfterSeconds / 60)
     throw new InputError(`Demo limit reached. Try again in ${minutes} minute${minutes === 1 ? '' : 's'}.`, 429)
+  }
+}
+
+/**
+ * A plain HTML form on another site can POST multipart here without a CORS preflight, and each
+ * visitor would spend paid runs. Browsers label such requests with Sec-Fetch-Site; non-browser
+ * clients (curl, the eval script) send none and stay subject to the rate limit.
+ */
+function checkSameSite(event: Parameters<typeof getRequestHeader>[0]) {
+  const site = getRequestHeader(event, 'sec-fetch-site')
+  if (site && site !== 'same-origin' && site !== 'none') {
+    throw new InputError('Cross-site requests are not allowed.', 403)
   }
 }
 

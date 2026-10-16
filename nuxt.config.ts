@@ -20,7 +20,17 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    '/': { prerender: true }
+    '/': { prerender: true },
+    // Baseline hardening. No CSP yet: it would need allowances for Nuxt's inline scripts and
+    // the LHC-Forms CDN, which loads with Subresource Integrity instead.
+    '/**': {
+      headers: {
+        'X-Content-Type-Options': 'nosniff',
+        'X-Frame-Options': 'DENY',
+        'Referrer-Policy': 'strict-origin-when-cross-origin',
+        'Permissions-Policy': 'camera=(), microphone=(), geolocation=()'
+      }
+    }
   },
 
   compatibilityDate: '2026-06-30',
