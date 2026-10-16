@@ -1,0 +1,30 @@
+{
+  "name": "form2fhir",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "typecheck": "nuxt typecheck",
+    "test": "vitest run",
+    "test:live": "LIVE=1 vitest run live"
+  },
+  "dependencies": {
+    "@iconify-json/lucide": "^1.2.142",
+    "@nuxt/ui": "^4.12.0",
+    "nuxt": "^4.6.1",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "^1.17.0",
+    "@types/node": "^24.19.2",
+    "eslint": "^10.12.0",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.5",
+    "vue-tsc": "^3.3.13"
+  },
+  "packageManager": "pnpm@10.30.0"
+}
