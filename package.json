@@ -13,6 +13,7 @@
     "test:live": "LIVE=1 vitest run live"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "0.135.0",
     "@iconify-json/lucide": "^1.2.142",
     "@nuxt/ui": "^4.12.0",
     "nuxt": "^4.6.1",
