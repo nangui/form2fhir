@@ -32,7 +32,9 @@ export default defineEventHandler(async (event) => {
   const runId = crypto.randomUUID()
   const stream = createEventStream(event)
   const disconnected = new AbortController()
-  stream.onClosed(() => disconnected.abort())
+  // The request body is already consumed, so h3's own close detection never fires: watch the
+  // response, or a cancelled conversion would keep calling Claude until the end.
+  event.node.res.on('close', () => disconnected.abort())
   const budget = AbortSignal.timeout(RUN_BUDGET_MS)
   const signal = AbortSignal.any([disconnected.signal, budget])
 
