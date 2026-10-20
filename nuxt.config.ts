@@ -2,7 +2,8 @@
 export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
-    '@nuxt/ui'
+    '@nuxt/ui',
+    '@vercel/analytics' // cookieless page views, only reported on Vercel deployments
   ],
 
   devtools: {
