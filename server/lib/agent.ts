@@ -2,9 +2,9 @@ import type Anthropic from '@anthropic-ai/sdk'
 import type { ConvertEvent, ConvertResult, TokenUsage, TraceStep, ValidationIssue } from '../../shared/types'
 import { AgentError, ToolInputError } from './errors'
 import { type FormInput, toContentBlocks } from './input'
-import { collectCodes, type LoincQueryResult, parseSearchInput, type SearchLoincInput } from './loinc'
+import { collectEvidence, type LoincQueryResult, parseSearchInput, type SearchLoincInput } from './loinc'
 import { LAST_TURN_PROMPT, NUDGE_PROMPT, SYSTEM_PROMPT, TASK_PROMPT, TOOLS } from './prompt'
-import type { ValidationResult } from './validate'
+import type { Evidence, ValidationResult } from './validate'
 
 type Params = Anthropic.Beta.MessageCreateParamsNonStreaming
 type ToolResult = Anthropic.Beta.BetaToolResultBlockParam
@@ -14,7 +14,7 @@ export interface AgentDeps {
   model: string
   createMessage: (params: Params, options: { signal?: AbortSignal }) => Promise<Anthropic.Beta.BetaMessage>
   searchLoinc: (input: SearchLoincInput, signal?: AbortSignal) => Promise<LoincQueryResult[]>
-  validate: (questionnaire: unknown, allowedCodes: ReadonlySet<string>, signal?: AbortSignal) => Promise<ValidationResult>
+  validate: (questionnaire: unknown, evidence: Evidence, signal?: AbortSignal) => Promise<ValidationResult>
   /** Token count of the form message (free endpoint), checked before any paid call. */
   countTokens?: (messages: Anthropic.Beta.BetaMessageParam[], signal?: AbortSignal) => Promise<number>
 }
@@ -51,7 +51,8 @@ export async function runAgent(
       throw new AgentError(`This form is too long for the demo (about ${tokens.toLocaleString('en-US')} tokens, max ${MAX_FORM_TOKENS.toLocaleString('en-US')}). Try fewer pages.`)
     }
   }
-  const allowedCodes = new Set<string>()
+  // Every search result of the run: validation checks codes, answer scores and panels against them.
+  const found: LoincQueryResult[] = []
   const searchBudget = { remaining: MAX_SEARCH_TERMS }
   const usage: TokenUsage = { inputTokens: 0, outputTokens: 0, cacheReadTokens: 0, cacheWriteTokens: 0 }
   const trace = createTrace(emit)
@@ -81,14 +82,14 @@ export async function runAgent(
     const results: ToolResult[] = []
     // Searches first, so a submission in the same turn can use the codes they return.
     for (const toolUse of toolUses.filter(t => t.name !== 'submit_questionnaire')) {
-      const result = await runSearch(toolUse, deps, allowedCodes, searchBudget, trace, signal)
+      const result = await runSearch(toolUse, deps, found, searchBudget, trace, signal)
       results.push(result)
       lastAction = result.is_error ? 'tool_error' : 'search'
     }
     for (const toolUse of toolUses.filter(t => t.name === 'submit_questionnaire')) {
       const questionnaire = (toolUse.input as { questionnaire?: unknown }).questionnaire
       const validation = await trace.run('validate', 'Validating the Questionnaire', () =>
-        deps.validate(questionnaire, allowedCodes, signal), result => validationLabel(result, hadInvalidSubmission))
+        deps.validate(questionnaire, collectEvidence(found), signal), result => validationLabel(result, hadInvalidSubmission))
       lastSubmission = { questionnaire, validation }
       results.push(validationResult(toolUse.id, validation))
       if (validation.valid) break
@@ -139,7 +140,7 @@ function requestParams(model: string, messages: Anthropic.Beta.BetaMessageParam[
 async function runSearch(
   toolUse: ToolUse,
   deps: AgentDeps,
-  allowedCodes: Set<string>,
+  found: LoincQueryResult[],
   searchBudget: { remaining: number },
   trace: Trace,
   signal?: AbortSignal
@@ -162,7 +163,7 @@ async function runSearch(
     label: `search_loinc ×${count}`,
     detail: `${found.filter(r => r.hits.length > 0).length} of ${count} terms matched`
   }))
-  for (const code of collectCodes(results)) allowedCodes.add(code)
+  found.push(...results)
   return { type: 'tool_result', tool_use_id: toolUse.id, content: JSON.stringify(results) }
 }
 

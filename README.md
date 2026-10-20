@@ -21,8 +21,8 @@ Browser ── POST /api/convert (text | PDF | image) ──► Nuxt server rout
                                                               errors go back to Claude to fix
 ```
 
-1. Claude reads the form (text, or a PDF / image natively) and calls **`search_loinc`** with every question worth coding. The server queries the NLM Clinical Tables LOINC API and remembers every code it returned.
-2. Claude calls **`submit_questionnaire`** with a complete FHIR R4 Questionnaire. The server checks what HAPI can't (every LOINC code must come from step 1; choice items need answer options; no HTML rendering extensions), then calls **HAPI FHIR `$validate`**.
+1. Claude reads the form (text, or a PDF / image natively) and calls **`search_loinc`** with every question worth coding. The server queries the NLM Clinical Tables LOINC API and remembers every code it returned. For a known instrument (PHQ-9, AUDIT-C…) it also fetches the panel's official questions, with their answers and scores.
+2. Claude calls **`submit_questionnaire`** with a complete FHIR R4 Questionnaire. The server checks what HAPI can't (every LOINC code must come from step 1; every scored LOINC answer carries its exact score as an `ordinalValue`; choice items need answer options; no HTML rendering extensions), warns when an item under a panel uses a code that is not one of the panel's questions, then calls **HAPI FHIR `$validate`**.
 3. Errors go back to Claude as a tool error and it resubmits the whole resource. The run stops when the Questionnaire is valid, or after 4 Claude calls with the last attempt shown as not valid.
 
 Every step streams to the UI, which renders the result with NLM's [LHC-Forms](https://lhncbc.github.io/lforms/), plus the JSON, the codes table and the validator report.

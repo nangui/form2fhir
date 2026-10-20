@@ -78,7 +78,7 @@ describe('runAgent', () => {
       'done: Drafting the Questionnaire',
       'done: Valid FHIR R4'
     ])
-    expect(deps.validate).toHaveBeenCalledWith(QUESTIONNAIRE, new Set(['8867-4']), undefined)
+    expect(deps.validate).toHaveBeenCalledWith(QUESTIONNAIRE, expect.objectContaining({ codes: new Set(['8867-4']) }), undefined)
     expect(calls).toHaveLength(2)
   })
 
@@ -224,7 +224,7 @@ describe('runAgent', () => {
 
     await run()
 
-    expect(validate).toHaveBeenCalledWith(QUESTIONNAIRE, new Set(['8867-4']), undefined)
+    expect(validate).toHaveBeenCalledWith(QUESTIONNAIRE, expect.objectContaining({ codes: new Set(['8867-4']) }), undefined)
     expect(calls).toHaveLength(1)
   })
 

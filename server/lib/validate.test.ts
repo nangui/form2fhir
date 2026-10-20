@@ -234,3 +234,132 @@ describe('validateQuestionnaire', () => {
     expect(fetchFn).not.toHaveBeenCalled()
   })
 })
+
+describe('answer fidelity (ordinal weights)', () => {
+  const ORDINAL = 'http://hl7.org/fhir/StructureDefinition/ordinalValue'
+  const scored = (code: string, display: string, weight?: unknown) => ({
+    valueCoding: { system: LOINC, code, display },
+    ...(weight === undefined ? {} : { extension: [{ url: ORDINAL, ...(typeof weight === 'number' ? { valueDecimal: weight } : { valueString: weight }) }] })
+  })
+  const phqItem = (options: unknown[]) => questionnaire([{ linkId: 'phq9-1', type: 'choice', text: 'Little interest', code: [{ system: LOINC, code: '44250-9' }], answerOption: options }])
+  const evidence = {
+    codes: new Set(['44250-9', 'LA6568-5', 'LA6569-3']),
+    answerScores: new Map([['44250-9', new Map<string, number | null>([['LA6568-5', 0], ['LA6569-3', 1]])]]),
+    panels: new Map()
+  }
+
+  it('accepts LOINC answers that carry their LOINC score as a numeric ordinalValue', () => {
+    expect(checkQuestionnaire(phqItem([scored('LA6568-5', 'Not at all', 0), scored('LA6569-3', 'Several days', 1)]), evidence)).toEqual([])
+  })
+
+  it('rejects a scored LOINC answer without its weight, telling the model which value to add', () => {
+    const issues = checkQuestionnaire(phqItem([scored('LA6568-5', 'Not at all'), scored('LA6569-3', 'Several days')]), evidence)
+
+    expect(issues.map(i => [i.location, i.message])).toContainEqual([
+      'Questionnaire.item[0].answerOption[0]',
+      'Answer "LA6568-5" (Not at all) has LOINC score 0: add it as an ordinalValue extension with valueDecimal 0.'
+    ])
+  })
+
+  it('rejects a weight that differs from the LOINC score', () => {
+    const issues = checkQuestionnaire(phqItem([scored('LA6568-5', 'Not at all', 0), scored('LA6569-3', 'Several days', 2)]), evidence)
+
+    expect(issues.map(i => i.message)).toEqual(['Answer "LA6569-3" (Several days) has ordinalValue 2, but its LOINC score is 1.'])
+  })
+
+  it('rejects a weight coerced to a string', () => {
+    const issues = checkQuestionnaire(phqItem([scored('LA6568-5', 'Not at all', '0'), scored('LA6569-3', 'Several days', 1)]), evidence)
+
+    expect(issues.map(i => i.message)).toContain('The ordinalValue of an answer must be a number in valueDecimal.')
+  })
+
+  it('checks scores of the item\'s own question only: "Yes" scored elsewhere is not scored here', () => {
+    const yesNo = (code: string) => ({ valueCoding: { system: LOINC, code, display: code } })
+    const q = questionnaire([{ linkId: 'refugee', type: 'choice', text: 'Are you a refugee?', code: [{ system: LOINC, code: '93027-1' }], answerOption: [yesNo('LA33-6'), yesNo('LA32-8')] }])
+    const prapare = {
+      codes: new Set(['93027-1', '76501-6', 'LA33-6', 'LA32-8']),
+      answerScores: new Map([
+        ['76501-6', new Map<string, number | null>([['LA33-6', 1], ['LA32-8', 0]])],
+        ['93027-1', new Map<string, number | null>([['LA33-6', null], ['LA32-8', null]])]
+      ]),
+      panels: new Map()
+    }
+
+    expect(checkQuestionnaire(q, prapare)).toEqual([])
+  })
+
+  it('does not require a weight on answers LOINC leaves unscored (e.g. "Don\'t know")', () => {
+    const hunger = {
+      codes: new Set(['88122-7', 'LA28397-0', 'LA28398-8', 'LA30968-4']),
+      answerScores: new Map([['88122-7', new Map<string, number | null>([['LA28397-0', 1], ['LA28398-8', 0], ['LA30968-4', null]])]]),
+      panels: new Map()
+    }
+    const q = questionnaire([{
+      linkId: 'q1',
+      type: 'choice',
+      text: 'Worried food would run out',
+      code: [{ system: LOINC, code: '88122-7' }],
+      answerOption: [scored('LA28397-0', 'Often true', 1), scored('LA28398-8', 'Never true', 0), scored('LA30968-4', 'DK or refused')]
+    }])
+
+    expect(checkQuestionnaire(q, hunger)).toEqual([])
+  })
+
+  it('lets a form-specific answer stay unweighted next to a scored LOINC scale', () => {
+    const q = phqItem([
+      scored('LA6568-5', 'Not at all', 0),
+      scored('LA6569-3', 'Several days', 1),
+      { valueCoding: { system: 'http://example.org/answers', code: 'prefer-not', display: 'Prefer not to say' } }
+    ])
+
+    expect(checkQuestionnaire(q, evidence)).toEqual([])
+  })
+
+  it('rejects a scale where only some coded answers carry a weight', () => {
+    const q = questionnaire([{
+      linkId: 'mood',
+      type: 'choice',
+      text: 'Mood',
+      answerOption: [
+        { valueCoding: { system: 'http://example.org/mood', code: 'a' }, extension: [{ url: ORDINAL, valueDecimal: 0 }] },
+        { valueCoding: { system: 'http://example.org/mood', code: 'b' } }
+      ]
+    }])
+
+    expect(errors(q, [])).toEqual(['Item "mood": either every coded answer carries an ordinalValue or none does (1 of 2 do).'])
+  })
+})
+
+describe('panel fidelity', () => {
+  const evidence = {
+    codes: new Set(['44249-1', '44250-9', '69722-7', '44256-6']),
+    answerScores: new Map(),
+    panels: new Map([['44249-1', new Set(['44250-9', '69722-7'])]])
+  }
+
+  it('warns (without blocking) when an item under a declared panel uses a code that is not one of its questions', () => {
+    const q = questionnaire([
+      { linkId: 'q1', type: 'string', text: 'Little interest', code: [{ system: LOINC, code: '44250-9' }] },
+      { linkId: 'difficulty', type: 'string', text: 'How difficult…', code: [{ system: LOINC, code: '44256-6' }] }
+    ], { code: [{ system: LOINC, code: '44249-1' }] })
+
+    expect(checkQuestionnaire(q, evidence)).toEqual([{
+      severity: 'warning',
+      source: 'local',
+      message: 'LOINC code 44256-6 is not one of the official questions of panel 44249-1. Check whether the panel has its own code for this question.',
+      location: 'Questionnaire.item[1]'
+    }])
+  })
+
+  it('applies to an instrument embedded as a group (e.g. AUDIT-C inside a longer form)', () => {
+    const q = questionnaire([{
+      linkId: 'g',
+      type: 'group',
+      text: 'Mood',
+      code: [{ system: LOINC, code: '44249-1' }],
+      item: [{ linkId: 'x', type: 'string', text: 'Other', code: [{ system: LOINC, code: '44256-6' }] }]
+    }])
+
+    expect(checkQuestionnaire(q, evidence).map(i => [i.severity, i.location])).toEqual([['warning', 'Questionnaire.item[0].item[0]']])
+  })
+})

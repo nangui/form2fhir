@@ -10,10 +10,27 @@ export interface EvalRow {
   coded: number
   total: number
   durationMs: number
+  /** Agent codes compared with the fixture's expected codes (absent when the fixture has none). */
+  codes?: { correct: number, wrong: number, missing: number }
   usage?: TokenUsage
   costUsd?: number
   error?: string
 }
+
+/** An item of the form (found by a case-insensitive regex on its text) and the LOINC codes accepted for it. */
+export interface ExpectedCode {
+  item: string
+  codes: string[]
+}
+
+export interface CodeCheck {
+  item: string
+  expected: string[]
+  got?: string
+  verdict: 'correct' | 'wrong' | 'missing'
+}
+
+interface Item { type?: string, text?: string, code?: { system?: string, code?: string }[], item?: Item[] }
 
 // USD per million tokens (Claude API list prices; 5-minute cache writes cost 1.25× input).
 const PRICES: Record<string, { input: number, output: number, cacheRead: number }> = {
@@ -31,23 +48,59 @@ export function estimateCostUsd(model: string, usage: TokenUsage): number | unde
     + usage.outputTokens * price.output) / 1_000_000
 }
 
+/**
+ * Code accuracy, beyond coverage: is the code on each known item one of the accepted ones?
+ * "missing" covers both an uncoded item and an item the agent dropped or reworded.
+ */
+export function scoreCodes(questionnaire: unknown, expected: ExpectedCode[]) {
+  const items = questionItems((questionnaire as { item?: Item[] } | undefined)?.item)
+  const used = new Set<Item>()
+  const checks = expected.map((entry): CodeCheck => {
+    const pattern = new RegExp(entry.item, 'i')
+    const item = items.find(candidate => !used.has(candidate) && pattern.test(candidate.text ?? ''))
+    if (item) used.add(item)
+    const got = item?.code?.find(coding => coding.system === 'http://loinc.org' && coding.code)?.code
+    const verdict = got === undefined ? 'missing' : entry.codes.includes(got) ? 'correct' : 'wrong'
+    return { item: entry.item, expected: entry.codes, ...(got === undefined ? {} : { got }), verdict }
+  })
+  const count = (verdict: CodeCheck['verdict']) => checks.filter(check => check.verdict === verdict).length
+  return { correct: count('correct'), wrong: count('wrong'), missing: count('missing'), checks }
+}
+
 export function toMarkdown(rows: EvalRow[], meta: { model: string, date: string }): string {
   const lines = rows.map((row) => {
     const valid = row.valid ? '✅' : `❌${row.error ? ` ${row.error}` : ''}`
     const coverage = row.total ? `${row.coded}/${row.total} (${Math.round((row.coded / row.total) * 100)}%)` : '—'
-    return `| ${row.name} | ${row.language} | ${valid} | ${row.iterations} | ${coverage} | ${seconds(row.durationMs)} | ${row.costUsd === undefined ? '—' : `$${row.costUsd.toFixed(3)}`} |`
+    return `| ${row.name} | ${row.language} | ${valid} | ${row.iterations} | ${coverage} | ${accuracy(row.codes)} | ${seconds(row.durationMs)} | ${row.costUsd === undefined ? '—' : `$${row.costUsd.toFixed(3)}`} |`
   })
   const validCount = rows.filter(row => row.valid).length
   const totalCost = rows.reduce((sum, row) => sum + (row.costUsd ?? 0), 0)
+  const scored = rows.flatMap(row => (row.codes ? [row.codes] : []))
+  const correct = scored.reduce((sum, codes) => sum + codes.correct, 0)
+  const wrong = scored.reduce((sum, codes) => sum + codes.wrong, 0)
+  const expected = scored.reduce((sum, codes) => sum + codes.correct + codes.wrong + codes.missing, 0)
+  const accuracyTotal = expected ? ` · code accuracy ${correct}/${expected} (${Math.round((correct / expected) * 100)}%), ${wrong} wrong` : ''
   return [
     `## Form2FHIR eval — ${meta.model} — ${meta.date}`,
     '',
-    '| Form | Lang | Valid | Claude calls | LOINC coverage | Time | Est. cost |',
-    '|---|---|---|---|---|---|---|',
+    '| Form | Lang | Valid | Claude calls | LOINC coverage | Code accuracy | Time | Est. cost |',
+    '|---|---|---|---|---|---|---|---|',
     ...lines,
     '',
-    `**${validCount}/${rows.length} valid** · median ${seconds(median(rows.map(row => row.durationMs)))} · total est. cost $${totalCost.toFixed(3)}`
+    `**${validCount}/${rows.length} valid** · median ${seconds(median(rows.map(row => row.durationMs)))} · total est. cost $${totalCost.toFixed(3)}${accuracyTotal}`
   ].join('\n')
+}
+
+function accuracy(codes: EvalRow['codes']): string {
+  if (!codes) return '—'
+  return `${codes.correct}/${codes.correct + codes.wrong + codes.missing}${codes.wrong ? ` (${codes.wrong} wrong)` : ''}`
+}
+
+function questionItems(items: Item[] | undefined): Item[] {
+  return (items ?? []).flatMap(item => [
+    ...(item.type === 'group' || item.type === 'display' ? [] : [item]),
+    ...questionItems(item.item)
+  ])
 }
 
 function seconds(ms: number): string {

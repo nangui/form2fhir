@@ -1,5 +1,5 @@
 // Runs every fixture in eval/fixtures.json through POST /api/convert and reports validity,
-// Claude calls, LOINC coverage, time and estimated cost. COSTS API MONEY: one paid run per fixture.
+// Claude calls, LOINC coverage, code accuracy (against each fixture's expectedCodes), time and estimated cost. COSTS API MONEY: one paid run per fixture.
 //
 //   node eval/run.ts [--url http://localhost:3000] [--only phq-9,bilan-diabete]
 //
@@ -11,13 +11,14 @@ import { parseArgs } from 'node:util'
 import type { ConvertEvent, ConvertResult } from '../shared/types'
 import { loincCoverage } from '../app/utils/questionnaire.ts'
 import { createSseParser } from '../app/utils/sse.ts'
-import { estimateCostUsd, toMarkdown, type EvalRow } from './report.ts'
+import { estimateCostUsd, scoreCodes, toMarkdown, type CodeCheck, type EvalRow, type ExpectedCode } from './report.ts'
 
 interface Fixture {
   id: string
   name: string
   language: string
   file: string
+  expectedCodes?: ExpectedCode[]
 }
 
 const MEDIA_TYPES: Record<string, string> = { '.pdf': 'application/pdf', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp' }
@@ -33,6 +34,7 @@ const outDir = new URL(`results/${new Date().toISOString().replace(/[:.]/g, '-')
 await mkdir(outDir, { recursive: true })
 
 const rows: EvalRow[] = []
+const codeChecks: Record<string, CodeCheck[]> = {}
 let model = 'unknown'
 for (const fixture of fixtures) {
   process.stdout.write(`→ ${fixture.name} … `)
@@ -41,13 +43,16 @@ for (const fixture of fixtures) {
     const result = await convert(fixture)
     model = result.model
     const coverage = loincCoverage(result.questionnaire)
+    const score = fixture.expectedCodes?.length ? scoreCodes(result.questionnaire, fixture.expectedCodes) : undefined
+    if (score) codeChecks[fixture.id] = score.checks
     rows.push({
       id: fixture.id, name: fixture.name, language: fixture.language,
       valid: result.valid, iterations: result.iterations, ...coverage,
+      ...(score ? { codes: { correct: score.correct, wrong: score.wrong, missing: score.missing } } : {}),
       durationMs: result.durationMs, usage: result.usage, costUsd: estimateCostUsd(result.model, result.usage)
     })
     await writeFile(new URL(`${fixture.id}.json`, outDir), JSON.stringify(result, null, 2))
-    console.log(`${result.valid ? 'valid' : 'NOT valid'} · ${result.iterations} calls · ${coverage.coded}/${coverage.total} coded · ${(result.durationMs / 1000).toFixed(1)} s`)
+    console.log(`${result.valid ? 'valid' : 'NOT valid'} · ${result.iterations} calls · ${coverage.coded}/${coverage.total} coded${score ? ` · ${score.correct}/${score.checks.length} expected codes (${score.wrong} wrong)` : ''} · ${(result.durationMs / 1000).toFixed(1)} s`)
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
     rows.push({ id: fixture.id, name: fixture.name, language: fixture.language, valid: false, iterations: 0, coded: 0, total: 0, durationMs: Date.now() - startedAt, error: message })
@@ -57,7 +62,7 @@ for (const fixture of fixtures) {
 
 const markdown = toMarkdown(rows, { model, date: new Date().toISOString().slice(0, 10) })
 await writeFile(new URL('summary.md', outDir), `${markdown}\n`)
-await writeFile(new URL('summary.json', outDir), JSON.stringify({ url: args.url, model, rows }, null, 2))
+await writeFile(new URL('summary.json', outDir), JSON.stringify({ url: args.url, model, rows, codeChecks }, null, 2))
 console.log(`\n${markdown}\n\nSaved to ${outDir.pathname}`)
 
 async function convert(fixture: Fixture): Promise<ConvertResult> {

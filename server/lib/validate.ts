@@ -1,13 +1,23 @@
 import type { ValidationIssue } from '../../shared/types'
 import { ServiceUnavailableError } from './errors'
 import { type HttpOptions, requestSignal } from './http'
+import type { SearchEvidence } from './loinc'
 
 export interface ValidationResult {
   valid: boolean
   issues: ValidationIssue[]
 }
 
+/** A bare allowlist is still accepted: it simply has no scores or panels to check against. */
+export type Evidence = ReadonlySet<string> | SearchEvidence
+
+interface Panel {
+  code: string
+  members: ReadonlySet<string>
+}
+
 const LOINC_SYSTEM = 'http://loinc.org'
+const ORDINAL_VALUE = 'http://hl7.org/fhir/StructureDefinition/ordinalValue'
 // Any other spelling of the LOINC system must not slip past the allowlist.
 const LOINC_SYSTEM_PATTERN = /loinc\.org|^urn:oid:2\.16\.840\.1\.113883\.6\.1$/i
 // rendering-xhtml, rendering-markdown, rendering-style…: all can smuggle markup into the preview.
@@ -27,21 +37,25 @@ const ITEM_TYPES = [
  */
 export async function validateQuestionnaire(
   questionnaire: unknown,
-  allowedCodes: ReadonlySet<string>,
+  evidence: Evidence,
   options: HttpOptions
 ): Promise<ValidationResult> {
-  const local = checkQuestionnaire(questionnaire, allowedCodes)
+  const local = checkQuestionnaire(questionnaire, evidence)
   const hapi = isQuestionnaire(questionnaire) ? await validateWithHapi(questionnaire, options) : []
   const issues = [...local, ...hapi]
   return { valid: !issues.some(issue => issue.severity === 'error'), issues }
 }
 
-/** Checks HAPI can't do for us: LOINC allowlist, usable choice items, no HTML, precise linkId errors. */
-export function checkQuestionnaire(questionnaire: unknown, allowedCodes: ReadonlySet<string>): ValidationIssue[] {
+/**
+ * Checks HAPI can't do for us: LOINC allowlist, answer scores carried as ordinalValue, items that
+ * stray from their declared panel (warning), usable choice items, no HTML, precise linkId errors.
+ */
+export function checkQuestionnaire(questionnaire: unknown, rawEvidence: Evidence): ValidationIssue[] {
   if (!isQuestionnaire(questionnaire)) {
     return [localError('The submitted value must be a FHIR Questionnaire object (resourceType "Questionnaire").')]
   }
 
+  const evidence = toEvidence(rawEvidence)
   const issues: ValidationIssue[] = []
   if (!STATUSES.includes(questionnaire.status as string)) {
     issues.push(localError(`status must be one of ${STATUSES.join(', ')}.`, 'Questionnaire.status'))
@@ -49,9 +63,10 @@ export function checkQuestionnaire(questionnaire: unknown, allowedCodes: Readonl
   if (!Array.isArray(questionnaire.item) || questionnaire.item.length === 0) {
     issues.push(localError('The Questionnaire must contain at least one item.', 'Questionnaire.item'))
   } else {
-    checkItems(questionnaire.item, 'Questionnaire', new Set(), issues)
+    const panel = findPanel(questionnaire.code, evidence)
+    checkItems(questionnaire.item, 'Questionnaire', { linkIds: new Set(), evidence, panel }, issues)
   }
-  walk(questionnaire, 'Questionnaire', (node, path) => checkNode(node, path, allowedCodes, issues))
+  walk(questionnaire, 'Questionnaire', (node, path) => checkNode(node, path, evidence.codes, issues))
   return issues
 }
 
@@ -97,7 +112,14 @@ export function parseOperationOutcome(outcome: unknown): ValidationIssue[] {
   return issues
 }
 
-function checkItems(items: unknown[], parentPath: string, linkIds: Set<string>, issues: ValidationIssue[]) {
+interface ItemContext {
+  linkIds: Set<string>
+  evidence: SearchEvidence
+  /** The panel declared by the nearest coded ancestor (or the Questionnaire), if search_loinc returned it. */
+  panel?: Panel
+}
+
+function checkItems(items: unknown[], parentPath: string, context: ItemContext, issues: ValidationIssue[]) {
   items.forEach((raw, i) => {
     const path = `${parentPath}.item[${i}]`
     const item = (raw ?? {}) as Record<string, unknown>
@@ -105,10 +127,10 @@ function checkItems(items: unknown[], parentPath: string, linkIds: Set<string>, 
     const linkId = typeof item.linkId === 'string' ? item.linkId.trim() : ''
     if (!linkId) {
       issues.push(localError('Every item needs a non-empty string linkId.', path))
-    } else if (linkIds.has(linkId)) {
+    } else if (context.linkIds.has(linkId)) {
       issues.push(localError(`Duplicate linkId "${linkId}". linkIds must be unique in the whole Questionnaire.`, path))
     } else {
-      linkIds.add(linkId)
+      context.linkIds.add(linkId)
     }
 
     if (!ITEM_TYPES.includes(item.type as string)) {
@@ -122,8 +144,99 @@ function checkItems(items: unknown[], parentPath: string, linkIds: Set<string>, 
       && (!Array.isArray(item.answerOption) || item.answerOption.length === 0)) {
       issues.push(localError(`Choice item "${linkId}" needs a non-empty answerOption list.`, path))
     }
-    if (Array.isArray(item.item)) checkItems(item.item, path, linkIds, issues)
+    if (Array.isArray(item.answerOption)) {
+      const scores = loincCodes(item.code).map(code => context.evidence.answerScores.get(code)).find(Boolean)
+      checkAnswerWeights(item.answerOption, linkId, path, scores, issues)
+    }
+
+    const ownPanel = findPanel(item.code, context.evidence)
+    if (!ownPanel && context.panel) checkPanelMembership(item.code, context.panel, path, issues)
+    if (Array.isArray(item.item)) checkItems(item.item, path, { ...context, panel: ownPanel ?? context.panel }, issues)
   })
+}
+
+/**
+ * Scored scales (PHQ-9, AUDIT-C…) are only usable if each answer carries its weight. The LOINC
+ * scores of the item's own question are checked exactly. Otherwise a partially weighted list is a
+ * mistake; but when LOINC scores the question, only its scored answers must be weighted ("Don't
+ * know", or a form-specific "Prefer not to say", may stay unweighted).
+ */
+function checkAnswerWeights(
+  options: unknown[],
+  linkId: string,
+  path: string,
+  scores: ReadonlyMap<string, number | null> | undefined,
+  issues: ValidationIssue[]
+) {
+  let coded = 0
+  let weighted = 0
+  options.forEach((raw, i) => {
+    const option = (raw ?? {}) as Record<string, unknown>
+    const coding = option.valueCoding as Record<string, unknown> | undefined
+    if (!coding || typeof coding !== 'object') return
+    const optionPath = `${path}.answerOption[${i}]`
+    const weight = ordinalValue(option) ?? ordinalValue(coding)
+    const score = coding.system === LOINC_SYSTEM ? scores?.get(String(coding.code)) : undefined
+    if (scores ? typeof score === 'number' : true) {
+      coded++
+      if (weight) weighted++
+    }
+    if (weight && typeof weight.valueDecimal !== 'number') {
+      issues.push(localError('The ordinalValue of an answer must be a number in valueDecimal.', optionPath))
+      return
+    }
+    if (score === undefined || score === null) return
+    const label = `Answer "${String(coding.code)}" (${String(coding.display ?? '')})`
+    if (!weight) {
+      issues.push(localError(`${label} has LOINC score ${score}: add it as an ordinalValue extension with valueDecimal ${score}.`, optionPath))
+    } else if (weight.valueDecimal !== score) {
+      issues.push(localError(`${label} has ordinalValue ${String(weight.valueDecimal)}, but its LOINC score is ${score}.`, optionPath))
+    }
+  })
+  if (weighted > 0 && weighted < coded) {
+    issues.push(localError(`Item "${linkId}": either every coded answer carries an ordinalValue or none does (${weighted} of ${coded} do).`, path))
+  }
+}
+
+function ordinalValue(element: Record<string, unknown>): Record<string, unknown> | undefined {
+  const extensions = Array.isArray(element.extension) ? element.extension as Record<string, unknown>[] : []
+  return extensions.find(extension => extension?.url === ORDINAL_VALUE)
+}
+
+/**
+ * A warning only: NLM's form definitions are not exhaustive (AUDIT-C lists 68517-2 where the
+ * printed form asks 68518-0), so a stray code deserves a second look, not a rejection.
+ */
+function checkPanelMembership(code: unknown, panel: Panel, path: string, issues: ValidationIssue[]) {
+  for (const loincCode of loincCodes(code)) {
+    if (panel.members.has(loincCode)) continue
+    issues.push({
+      severity: 'warning',
+      source: 'local',
+      message: `LOINC code ${loincCode} is not one of the official questions of panel ${panel.code}. Check whether the panel has its own code for this question.`,
+      location: path
+    })
+  }
+}
+
+function findPanel(code: unknown, evidence: SearchEvidence): Panel | undefined {
+  for (const loincCode of loincCodes(code)) {
+    const members = evidence.panels.get(loincCode)
+    if (members) return { code: loincCode, members }
+  }
+  return undefined
+}
+
+function loincCodes(code: unknown): string[] {
+  if (!Array.isArray(code)) return []
+  return (code as Record<string, unknown>[])
+    .filter(coding => coding?.system === LOINC_SYSTEM && typeof coding.code === 'string')
+    .map(coding => coding.code as string)
+}
+
+function toEvidence(evidence: Evidence): SearchEvidence {
+  if ('codes' in evidence) return evidence
+  return { codes: new Set(evidence), answerScores: new Map(), panels: new Map() }
 }
 
 function checkNode(node: Record<string, unknown>, path: string, allowedCodes: ReadonlySet<string>, issues: ValidationIssue[]) {

@@ -5,7 +5,73 @@
     "language": "en",
     "file": "../public/examples/vital-signs.txt",
     "sourceUrl": null,
-    "license": "CC0 — written for Form2FHIR"
+    "license": "CC0 — written for Form2FHIR",
+    "expectedCodes": [
+      {
+        "item": "temperature",
+        "codes": [
+          "8310-5"
+        ]
+      },
+      {
+        "item": "heart rate",
+        "codes": [
+          "8867-4"
+        ]
+      },
+      {
+        "item": "respiratory rate",
+        "codes": [
+          "9279-1"
+        ]
+      },
+      {
+        "item": "systolic",
+        "codes": [
+          "8480-6",
+          "8459-0"
+        ]
+      },
+      {
+        "item": "diastolic",
+        "codes": [
+          "8462-4",
+          "8453-3"
+        ]
+      },
+      {
+        "item": "oxygen saturation",
+        "codes": [
+          "59408-5",
+          "2708-6"
+        ]
+      },
+      {
+        "item": "body weight",
+        "codes": [
+          "29463-7",
+          "3141-9"
+        ]
+      },
+      {
+        "item": "body height",
+        "codes": [
+          "8302-2"
+        ]
+      },
+      {
+        "item": "pain severity",
+        "codes": [
+          "72514-3"
+        ]
+      },
+      {
+        "item": "flow rate",
+        "codes": [
+          "3151-8"
+        ]
+      }
+    ]
   },
   {
     "id": "phq-9",
@@ -13,7 +79,69 @@
     "language": "en",
     "file": "../public/examples/phq-9.txt",
     "sourceUrl": "https://www.phqscreeners.com/",
-    "license": "Pfizer: no permission required to reproduce, translate, display or distribute"
+    "license": "Pfizer: no permission required to reproduce, translate, display or distribute",
+    "expectedCodes": [
+      {
+        "item": "little interest",
+        "codes": [
+          "44250-9"
+        ]
+      },
+      {
+        "item": "feeling down",
+        "codes": [
+          "44255-8"
+        ]
+      },
+      {
+        "item": "trouble falling",
+        "codes": [
+          "44259-0"
+        ]
+      },
+      {
+        "item": "feeling tired",
+        "codes": [
+          "44254-1"
+        ]
+      },
+      {
+        "item": "poor appetite",
+        "codes": [
+          "44251-7"
+        ]
+      },
+      {
+        "item": "feeling bad about yourself",
+        "codes": [
+          "44258-2"
+        ]
+      },
+      {
+        "item": "trouble concentrating",
+        "codes": [
+          "44252-5"
+        ]
+      },
+      {
+        "item": "moving or speaking",
+        "codes": [
+          "44253-3"
+        ]
+      },
+      {
+        "item": "better off dead",
+        "codes": [
+          "44260-8"
+        ]
+      },
+      {
+        "item": "how difficult",
+        "codes": [
+          "69722-7"
+        ]
+      }
+    ]
   },
   {
     "id": "pre-visit-intake",
@@ -21,7 +149,33 @@
     "language": "en",
     "file": "../public/examples/pre-visit-intake.pdf",
     "sourceUrl": null,
-    "license": "CC0 — written for Form2FHIR (source: eval/forms/pre-visit-intake.html)"
+    "license": "CC0 — written for Form2FHIR (source: eval/forms/pre-visit-intake.html)",
+    "expectedCodes": [
+      {
+        "item": "date of birth",
+        "codes": [
+          "21112-8"
+        ]
+      },
+      {
+        "item": "tobacco",
+        "codes": [
+          "72166-2"
+        ]
+      },
+      {
+        "item": "drink containing alcohol",
+        "codes": [
+          "68518-0"
+        ]
+      },
+      {
+        "item": "pain",
+        "codes": [
+          "72514-3"
+        ]
+      }
+    ]
   },
   {
     "id": "sportif-mineur",
@@ -29,7 +183,15 @@
     "language": "fr",
     "file": "fixtures/questionnaire-sante-sportif-mineur.pdf",
     "sourceUrl": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000043486824",
-    "license": "Official French legal text (Arrêté du 7 mai 2021, JORF n°0107 du 8 mai 2021, texte 34; annexe II-23 du code du sport). Public information published in the Journal officiel, free to reuse (Code des relations entre le public et l'administration, art. L. 321-1; Légifrance reuse terms). Copy downloaded from https://www.ville-villeneuve-sur-lot.fr/pdf/Questionnaire_de_sante_Enfant.pdf (the JORF page itself)."
+    "license": "Official French legal text (Arrêté du 7 mai 2021, JORF n°0107 du 8 mai 2021, texte 34; annexe II-23 du code du sport). Public information published in the Journal officiel, free to reuse (Code des relations entre le public et l'administration, art. L. 321-1; Légifrance reuse terms). Copy downloaded from https://www.ville-villeneuve-sur-lot.fr/pdf/Questionnaire_de_sante_Enfant.pdf (the JORF page itself).",
+    "expectedCodes": [
+      {
+        "item": "ton âge",
+        "codes": [
+          "30525-0"
+        ]
+      }
+    ]
   },
   {
     "id": "bilan-diabete",
@@ -37,6 +199,134 @@
     "language": "fr",
     "file": "fixtures/bilan-diabete-type-2.pdf",
     "sourceUrl": null,
-    "license": "CC0 — written for Form2FHIR (source: eval/forms/bilan-diabete-type-2.html). Embeds AUDIT-C (WHO AUDIT items 1–3, public domain) and PHQ-2 (PHQ-9 items 1–2, Pfizer, free to reproduce)."
+    "license": "CC0 — written for Form2FHIR (source: eval/forms/bilan-diabete-type-2.html). Embeds AUDIT-C (WHO AUDIT items 1–3, public domain) and PHQ-2 (PHQ-9 items 1–2, Pfizer, free to reproduce).",
+    "expectedCodes": [
+      {
+        "item": "date de naissance",
+        "codes": [
+          "21112-8"
+        ]
+      },
+      {
+        "item": "tabac",
+        "codes": [
+          "72166-2"
+        ]
+      },
+      {
+        "item": "consommation d.alcool",
+        "codes": [
+          "68518-0"
+        ]
+      },
+      {
+        "item": "combien de verres",
+        "codes": [
+          "68519-8"
+        ]
+      },
+      {
+        "item": "six verres",
+        "codes": [
+          "68520-6"
+        ]
+      },
+      {
+        "item": "peu d.intérêt",
+        "codes": [
+          "44250-9"
+        ]
+      },
+      {
+        "item": "triste",
+        "codes": [
+          "44255-8"
+        ]
+      },
+      {
+        "item": "^poids",
+        "codes": [
+          "29463-7",
+          "3141-9"
+        ]
+      },
+      {
+        "item": "^taille",
+        "codes": [
+          "8302-2"
+        ]
+      },
+      {
+        "item": "imc|indice de masse corporelle",
+        "codes": [
+          "39156-5"
+        ]
+      },
+      {
+        "item": "tour de taille",
+        "codes": [
+          "8280-0"
+        ]
+      },
+      {
+        "item": "fréquence cardiaque",
+        "codes": [
+          "8867-4"
+        ]
+      },
+      {
+        "item": "systolique",
+        "codes": [
+          "8480-6",
+          "8459-0"
+        ]
+      },
+      {
+        "item": "diastolique",
+        "codes": [
+          "8462-4",
+          "8453-3"
+        ]
+      },
+      {
+        "item": "hémoglobine glyquée|hba1c",
+        "codes": [
+          "4548-4"
+        ]
+      },
+      {
+        "item": "glycémie à jeun",
+        "codes": [
+          "1558-6"
+        ]
+      },
+      {
+        "item": "cholestérol ldl",
+        "codes": [
+          "13457-7",
+          "18262-6",
+          "2089-1"
+        ]
+      },
+      {
+        "item": "créatinin(é|e)mie",
+        "codes": [
+          "14682-9"
+        ]
+      },
+      {
+        "item": "débit de filtration glomérulaire",
+        "codes": [
+          "98979-8",
+          "62238-1"
+        ]
+      },
+      {
+        "item": "albuminurie",
+        "codes": [
+          "32294-1"
+        ]
+      }
+    ]
   }
 ]

@@ -17,8 +17,8 @@ Always finish by calling submit_questionnaire; a turn without a tool call wastes
 ## LOINC rules
 - Use only codes that search_loinc returned in this conversation, including answer codes (LA…). Never write a LOINC code from memory: the server rejects any code it did not return.
 - If no result clearly matches a question, leave that item without a code. An uncoded item is better than a wrong code.
-- When a known instrument matches a LOINC panel, put the panel code on Questionnaire.code and code each item with the panel's question codes.
-- When a search hit has an answer list and the form uses the same answers, use those LA codes in answerOption.valueCoding, with the "score" as an ordinalValue extension.
+- When a known instrument matches a LOINC panel, put the panel code on Questionnaire.code (or on the group that holds an embedded instrument). The top panel hit lists its official questions in "members": prefer the member code that asks the same question as the item over a similar standalone question. A member only matches if it asks the same thing; otherwise use a standalone hit that clearly does, or leave the item uncoded.
+- When a hit or member has an answer list and the form uses the same answers, use those LA codes in answerOption.valueCoding. Every answer that has a "score" for that question must carry it as an ordinalValue extension with exactly that value; the server rejects missing or different scores. Never invent a score for an answer that has none.
 - System is always exactly "http://loinc.org". Include "display" with the LOINC name.
 
 ## Questionnaire rules
@@ -40,6 +40,7 @@ export const TOOLS: Anthropic.Beta.BetaToolUnion[] = [
     name: 'search_loinc',
     description: 'Search LOINC (NLM Clinical Tables) for question codes and panel/form codes. Send all searches in one call. '
       + 'Returns, per search term, up to 7 hits with code, display name, datatype, units and the first answer list (LA codes with scores) when the term has one. '
+      + 'For a panel search, the top hit also lists the panel\'s official questions in "members", with their answers and scores. '
       + 'Only codes returned here may be used in the Questionnaire.',
     input_schema: {
       type: 'object',
@@ -60,7 +61,7 @@ export const TOOLS: Anthropic.Beta.BetaToolUnion[] = [
   },
   {
     name: 'submit_questionnaire',
-    description: 'Submit the complete FHIR R4 Questionnaire. The server checks it (LOINC codes, linkIds, answer options) and validates it with the HAPI FHIR $validate operation. '
+    description: 'Submit the complete FHIR R4 Questionnaire. The server checks it (LOINC codes, answer scores, linkIds, answer options) and validates it with the HAPI FHIR $validate operation. '
       + 'Returns "valid" when it passes; otherwise returns the errors to fix. Always submit the complete resource, not a patch.',
     input_schema: {
       type: 'object',

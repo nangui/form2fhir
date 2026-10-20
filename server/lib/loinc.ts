@@ -13,6 +13,21 @@ export interface LoincHit {
   datatype?: string
   units?: string[]
   answers?: LoincAnswer[]
+  /** For a panel hit: its official questions (LOINC form definition), with their answers and scores. */
+  members?: LoincHit[]
+}
+
+/** What the searches of a run returned: what the model may use, and what validation can check against. */
+export interface SearchEvidence {
+  codes: Set<string>
+  /**
+   * Question code → its answers (LA code → LOINC score). Scores belong to a question/answer pair:
+   * "Yes" scores 1 on one question and nothing on another. null = LOINC gives no score (e.g.
+   * "Don't know"), or two sources disagree.
+   */
+  answerScores: Map<string, Map<string, number | null>>
+  /** Panel code → the codes of its official questions. */
+  panels: Map<string, Set<string>>
 }
 
 export interface LoincQueryResult {
@@ -31,6 +46,8 @@ const MAX_QUERIES = 25
 const MAX_QUERY_LENGTH = 200
 const MAX_HITS = 7
 const CONCURRENCY = 5
+// MDS 3.0 has 3,132 questions (~275k tokens): past this size a panel stays unexpanded.
+const MAX_MEMBERS = 60
 // The default search fields rank vital signs poorly (e.g. systolic BP 8480-6 is not in the top 10).
 const SEARCH_FIELDS = 'LONG_COMMON_NAME,SHORTNAME,COMPONENT,SURVEY_QUEST_TEXT'
 
@@ -50,7 +67,13 @@ export async function searchLoinc(input: SearchLoincInput, options: HttpOptions)
     ...(input.panels ?? []).map(query => ({ query, kind: 'panel' as const }))
   ]
   if (jobs.length === 0) return []
-  const results = await mapWithLimit(jobs, CONCURRENCY, job => searchOne(job.query, job.kind, options))
+  // Two names for the same instrument ("PHQ-9", "PHQ9") fetch its definition once.
+  const definitions = new Map<string, Promise<LoincHit[]>>()
+  const definition = (code: string) => {
+    if (!definitions.has(code)) definitions.set(code, fetchFormDefinition(code, options))
+    return definitions.get(code)!
+  }
+  const results = await mapWithLimit(jobs, CONCURRENCY, job => searchOne(job.query, job.kind, options, definition))
   if (results.every(result => result.error)) {
     throw new ServiceUnavailableError('loinc', 'LOINC search is unavailable right now. Try again in a minute.')
   }
@@ -59,12 +82,57 @@ export async function searchLoinc(input: SearchLoincInput, options: HttpOptions)
 
 /** Every code the model is allowed to use: question/panel codes plus their answer (LA) codes. */
 export function collectCodes(results: LoincQueryResult[]): Set<string> {
-  const codes = new Set<string>()
-  for (const hit of results.flatMap(result => result.hits)) {
-    codes.add(hit.code)
-    for (const answer of hit.answers ?? []) codes.add(answer.code)
+  return collectEvidence(results).codes
+}
+
+export function collectEvidence(results: LoincQueryResult[]): SearchEvidence {
+  const evidence: SearchEvidence = { codes: new Set(), answerScores: new Map(), panels: new Map() }
+  const add = (hit: LoincHit) => {
+    evidence.codes.add(hit.code)
+    if (hit.answers?.length) {
+      const scores = evidence.answerScores.get(hit.code) ?? new Map<string, number | null>()
+      for (const answer of hit.answers) {
+        evidence.codes.add(answer.code)
+        const score = answer.score ?? null
+        const known = scores.get(answer.code)
+        // Two sources disagree on this answer's score: check nothing rather than guess.
+        scores.set(answer.code, known === undefined || known === score ? score : null)
+      }
+      evidence.answerScores.set(hit.code, scores)
+    }
+    if (hit.members) {
+      evidence.panels.set(hit.code, new Set(hit.members.map(member => member.code)))
+      for (const member of hit.members) add(member)
+    }
   }
-  return codes
+  for (const hit of results.flatMap(result => result.hits)) add(hit)
+  return evidence
+}
+
+/** LOINC form definition (Clinical Tables /loinc_form_definitions): nested items, flattened. */
+export function parseFormDefinition(body: unknown): LoincHit[] {
+  const items = (body as { items?: unknown } | undefined)?.items
+  if (!Array.isArray(items)) return []
+  const members: LoincHit[] = []
+  const walk = (list: unknown[]) => {
+    for (const raw of list.filter(isObject)) {
+      if (typeof raw.questionCode === 'string') {
+        const member: LoincHit = { code: raw.questionCode, display: String(raw.question ?? '') }
+        const answers = Array.isArray(raw.answers)
+          ? raw.answers.filter(isObject).filter(a => typeof a.code === 'string').map(a => ({
+              code: a.code as string,
+              display: String(a.text ?? ''),
+              ...(typeof a.score === 'number' ? { score: a.score } : {})
+            }))
+          : []
+        if (answers.length) member.answers = answers
+        members.push(member)
+      }
+      if (Array.isArray(raw.items)) walk(raw.items)
+    }
+  }
+  walk(items)
+  return members
 }
 
 /** Clinical Tables response: [total, codes[], extraFields | null, displays[][]]. */
@@ -81,7 +149,12 @@ export function parseSearchResponse(body: unknown): LoincHit[] {
     .filter(hit => !hit.display.startsWith('Deprecated'))
 }
 
-async function searchOne(query: string, kind: LoincQueryResult['kind'], options: HttpOptions): Promise<LoincQueryResult> {
+async function searchOne(
+  query: string,
+  kind: LoincQueryResult['kind'],
+  options: HttpOptions,
+  definition: (code: string) => Promise<LoincHit[]>
+): Promise<LoincQueryResult> {
   const url = new URL(options.baseUrl)
   url.search = new URLSearchParams({
     terms: query,
@@ -96,12 +169,39 @@ async function searchOne(query: string, kind: LoincQueryResult['kind'], options:
   try {
     const response = await (options.fetch ?? fetch)(url, { signal: request.signal })
     if (!response.ok) return { query, kind, hits: [], error: `LOINC search failed (HTTP ${response.status})` }
-    return { query, kind, hits: parseSearchResponse(await response.json()) }
+    const hits = parseSearchResponse(await response.json())
+    // The top panel hit carries its official questions, so the model can code each item with the
+    // panel's own code (e.g. PHQ-9 difficulty = 69722-7, not the generic 44256-6).
+    const top = hits[0]
+    if (kind === 'panel' && top) {
+      const members = await definition(top.code)
+      if (members.length) top.members = members
+    }
+    return { query, kind, hits }
   } catch (error) {
     if (request.callerAborted()) throw error
     const reason = request.timedOut() ? 'timed out' : 'failed'
     return { query, kind, hits: [], error: `LOINC search ${reason}` }
   }
+}
+
+/** A panel's official questions; [] when unavailable or too large (the search result stays usable without them). */
+async function fetchFormDefinition(code: string, options: HttpOptions): Promise<LoincHit[]> {
+  const url = new URL('/loinc_form_definitions', options.baseUrl)
+  url.searchParams.set('loinc_num', code)
+  const request = requestSignal(options, 5000)
+  try {
+    const response = await (options.fetch ?? fetch)(url, { signal: request.signal })
+    const members = response.ok ? parseFormDefinition(await response.json()) : []
+    return members.length <= MAX_MEMBERS ? members : []
+  } catch (error) {
+    if (request.callerAborted()) throw error
+    return []
+  }
+}
+
+function isObject(value: unknown): value is Record<string, unknown> {
+  return !!value && typeof value === 'object'
 }
 
 function toHit(code: string, display: string, extra: Record<string, unknown[] | undefined>, i: number): LoincHit {
