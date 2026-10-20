@@ -59,18 +59,19 @@ pnpm dev
 
 Five blank forms (`eval/fixtures.json` lists each one's source and license), run end to end through `/api/convert` with Claude Sonnet 5.5:
 
-| Form | Lang | Valid | Claude calls | LOINC coverage | Time | Est. cost |
-|---|---|---|---|---|---|---|
-| Vital Signs Intake | en | ✅ | 2 | 9/13 (69%) | 13.7 s | $0.039 |
-| PHQ-9 | en | ✅ | 2 | 10/10 (100%) | 26.0 s | $0.076 |
-| Pre-Visit Health Questionnaire (PDF) | en | ✅ | 2 | 6/11 (55%) | 13.2 s | $0.035 |
-| Questionnaire relatif à l'état de santé du sportif mineur (Journal officiel, PDF) | fr | ✅ | 2 | 2/26 (8%) | 16.7 s | $0.053 |
-| Bilan annuel de suivi — Diabète de type 2 (PDF, 3 pages) | fr | ✅ | 3 | 18/56 (32%) | 49.3 s | $0.145 |
+| Form | Lang | Valid | Claude calls | LOINC coverage | Code accuracy | Time | Est. cost |
+|---|---|---|---|---|---|---|---|
+| Vital Signs Intake | en | ✅ | 2 | 8/13 (62%) | 8/10 | 12.9 s | $0.040 |
+| PHQ-9 | en | ✅ | 2 | 10/10 (100%) | 10/10 | 24.1 s | $0.055 |
+| Pre-Visit Health Questionnaire (PDF) | en | ✅ | 2 | 4/11 (36%) | 3/4 | 15.7 s | $0.031 |
+| Questionnaire relatif à l'état de santé du sportif mineur (Journal officiel, PDF) | fr | ✅ | 2 | 1/26 (4%) | 0/1 | 16.6 s | $0.049 |
+| Bilan annuel de suivi (diabète de type 2, PDF, 3 pages) | fr | ✅ | 2 | 16/56 (29%) | 14/20 | 45.8 s | $0.126 |
 
-**5/5 valid** · median 16.7 s · total ≈ $0.35 (2026-10-16, `eval/results/`).
+**5/5 valid** · median 16.6 s · total ≈ $0.30 · code accuracy 35/45 (78%), **0 wrong** (2026-10-20, `eval/results/`).
 
 How to read it:
 - **Valid** means the HAPI FHIR `$validate` operation reported no errors *and* the server's own checks passed (every LOINC code was returned by a search in the same run).
+- **Code accuracy** compares the agent's codes with an answer key of 45 items (`expectedCodes` in `eval/fixtures.json`, each code checked against the LOINC API): correct, wrong (another code) or missing (uncoded). Valid FHIR is not enough: a Questionnaire can pass `$validate` with the wrong code. Re-scoring the previous run (2026-10-16) gives 37/45 with 2 wrong, among them the PHQ-9 difficulty question coded with the generic 44256-6 instead of the panel's own 69722-7. Since panel searches return the panel's official questions, PHQ-9 is 10/10 and no code is wrong; the agent leaves a few more items uncoded instead (AUDIT-C item 1, whose code is missing from NLM's AUDIT-C definition). One run per form, so expect some variance.
 - **LOINC coverage** counts every question item, including ones no terminology would code (name, consultation date, free-text notes, or the French sports questionnaire's custom questions). Codes are only added when a search result clearly matches; an uncoded item is preferred to a wrong code.
 - A first run scored 8/56 on the diabetes form because the agent submitted after a single search round. Telling it to always search in English (the LOINC API is English-only), to cover standard measurements systematically and to search embedded instruments (AUDIT-C, PHQ-2) raised it to 18/56 with no wrong codes. Both runs are kept in `eval/results/`.
 

@@ -1,0 +1,488 @@
+{
+  "url": "http://localhost:3123",
+  "model": "claude-sonnet-5-5",
+  "rows": [
+    {
+      "id": "vital-signs",
+      "name": "Vital Signs Intake",
+      "language": "en",
+      "valid": true,
+      "iterations": 2,
+      "coded": 8,
+      "total": 13,
+      "codes": {
+        "correct": 8,
+        "wrong": 0,
+        "missing": 2
+      },
+      "durationMs": 12858,
+      "usage": {
+        "inputTokens": 6,
+        "outputTokens": 2024,
+        "cacheReadTokens": 2709,
+        "cacheWriteTokens": 7602
+      },
+      "costUsd": 0.0397988
+    },
+    {
+      "id": "phq-9",
+      "name": "PHQ-9",
+      "language": "en",
+      "valid": true,
+      "iterations": 2,
+      "coded": 10,
+      "total": 10,
+      "codes": {
+        "correct": 10,
+        "wrong": 0,
+        "missing": 0
+      },
+      "durationMs": 24059,
+      "usage": {
+        "inputTokens": 6,
+        "outputTokens": 4780,
+        "cacheReadTokens": 5303,
+        "cacheWriteTokens": 2301
+      },
+      "costUsd": 0.054625099999999996
+    },
+    {
+      "id": "pre-visit-intake",
+      "name": "Pre-Visit Health Questionnaire (PDF)",
+      "language": "en",
+      "valid": true,
+      "iterations": 2,
+      "coded": 4,
+      "total": 11,
+      "codes": {
+        "correct": 3,
+        "wrong": 0,
+        "missing": 1
+      },
+      "durationMs": 15700,
+      "usage": {
+        "inputTokens": 6,
+        "outputTokens": 1945,
+        "cacheReadTokens": 6798,
+        "cacheWriteTokens": 4220
+      },
+      "costUsd": 0.0313716
+    },
+    {
+      "id": "sportif-mineur",
+      "name": "Questionnaire relatif à l'état de santé du sportif mineur (Journal officiel, PDF)",
+      "language": "fr",
+      "valid": true,
+      "iterations": 2,
+      "coded": 1,
+      "total": 26,
+      "codes": {
+        "correct": 0,
+        "wrong": 0,
+        "missing": 1
+      },
+      "durationMs": 16559,
+      "usage": {
+        "inputTokens": 6,
+        "outputTokens": 2306,
+        "cacheReadTokens": 10674,
+        "cacheWriteTokens": 9384
+      },
+      "costUsd": 0.0486668
+    },
+    {
+      "id": "bilan-diabete",
+      "name": "Bilan annuel de suivi — Diabète de type 2 (PDF, 3 pages)",
+      "language": "fr",
+      "valid": true,
+      "iterations": 2,
+      "coded": 16,
+      "total": 56,
+      "codes": {
+        "correct": 14,
+        "wrong": 0,
+        "missing": 6
+      },
+      "durationMs": 45756,
+      "usage": {
+        "inputTokens": 6,
+        "outputTokens": 8903,
+        "cacheReadTokens": 11883,
+        "cacheWriteTokens": 14015
+      },
+      "costUsd": 0.12645610000000002
+    }
+  ],
+  "codeChecks": {
+    "vital-signs": [
+      {
+        "item": "temperature",
+        "expected": [
+          "8310-5"
+        ],
+        "got": "8310-5",
+        "verdict": "correct"
+      },
+      {
+        "item": "heart rate",
+        "expected": [
+          "8867-4"
+        ],
+        "got": "8867-4",
+        "verdict": "correct"
+      },
+      {
+        "item": "respiratory rate",
+        "expected": [
+          "9279-1"
+        ],
+        "verdict": "missing"
+      },
+      {
+        "item": "systolic",
+        "expected": [
+          "8480-6",
+          "8459-0"
+        ],
+        "got": "8480-6",
+        "verdict": "correct"
+      },
+      {
+        "item": "diastolic",
+        "expected": [
+          "8462-4",
+          "8453-3"
+        ],
+        "got": "8462-4",
+        "verdict": "correct"
+      },
+      {
+        "item": "oxygen saturation",
+        "expected": [
+          "59408-5",
+          "2708-6"
+        ],
+        "got": "59408-5",
+        "verdict": "correct"
+      },
+      {
+        "item": "body weight",
+        "expected": [
+          "29463-7",
+          "3141-9"
+        ],
+        "verdict": "missing"
+      },
+      {
+        "item": "body height",
+        "expected": [
+          "8302-2"
+        ],
+        "got": "8302-2",
+        "verdict": "correct"
+      },
+      {
+        "item": "pain severity",
+        "expected": [
+          "72514-3"
+        ],
+        "got": "72514-3",
+        "verdict": "correct"
+      },
+      {
+        "item": "flow rate",
+        "expected": [
+          "3151-8"
+        ],
+        "got": "3151-8",
+        "verdict": "correct"
+      }
+    ],
+    "phq-9": [
+      {
+        "item": "little interest",
+        "expected": [
+          "44250-9"
+        ],
+        "got": "44250-9",
+        "verdict": "correct"
+      },
+      {
+        "item": "feeling down",
+        "expected": [
+          "44255-8"
+        ],
+        "got": "44255-8",
+        "verdict": "correct"
+      },
+      {
+        "item": "trouble falling",
+        "expected": [
+          "44259-0"
+        ],
+        "got": "44259-0",
+        "verdict": "correct"
+      },
+      {
+        "item": "feeling tired",
+        "expected": [
+          "44254-1"
+        ],
+        "got": "44254-1",
+        "verdict": "correct"
+      },
+      {
+        "item": "poor appetite",
+        "expected": [
+          "44251-7"
+        ],
+        "got": "44251-7",
+        "verdict": "correct"
+      },
+      {
+        "item": "feeling bad about yourself",
+        "expected": [
+          "44258-2"
+        ],
+        "got": "44258-2",
+        "verdict": "correct"
+      },
+      {
+        "item": "trouble concentrating",
+        "expected": [
+          "44252-5"
+        ],
+        "got": "44252-5",
+        "verdict": "correct"
+      },
+      {
+        "item": "moving or speaking",
+        "expected": [
+          "44253-3"
+        ],
+        "got": "44253-3",
+        "verdict": "correct"
+      },
+      {
+        "item": "better off dead",
+        "expected": [
+          "44260-8"
+        ],
+        "got": "44260-8",
+        "verdict": "correct"
+      },
+      {
+        "item": "how difficult",
+        "expected": [
+          "69722-7"
+        ],
+        "got": "69722-7",
+        "verdict": "correct"
+      }
+    ],
+    "pre-visit-intake": [
+      {
+        "item": "date of birth",
+        "expected": [
+          "21112-8"
+        ],
+        "verdict": "missing"
+      },
+      {
+        "item": "tobacco",
+        "expected": [
+          "72166-2"
+        ],
+        "got": "72166-2",
+        "verdict": "correct"
+      },
+      {
+        "item": "drink containing alcohol",
+        "expected": [
+          "68518-0"
+        ],
+        "got": "68518-0",
+        "verdict": "correct"
+      },
+      {
+        "item": "pain",
+        "expected": [
+          "72514-3"
+        ],
+        "got": "72514-3",
+        "verdict": "correct"
+      }
+    ],
+    "sportif-mineur": [
+      {
+        "item": "ton âge",
+        "expected": [
+          "30525-0"
+        ],
+        "verdict": "missing"
+      }
+    ],
+    "bilan-diabete": [
+      {
+        "item": "date de naissance",
+        "expected": [
+          "21112-8"
+        ],
+        "got": "21112-8",
+        "verdict": "correct"
+      },
+      {
+        "item": "tabac",
+        "expected": [
+          "72166-2"
+        ],
+        "got": "72166-2",
+        "verdict": "correct"
+      },
+      {
+        "item": "consommation d.alcool",
+        "expected": [
+          "68518-0"
+        ],
+        "verdict": "missing"
+      },
+      {
+        "item": "combien de verres",
+        "expected": [
+          "68519-8"
+        ],
+        "got": "68519-8",
+        "verdict": "correct"
+      },
+      {
+        "item": "six verres",
+        "expected": [
+          "68520-6"
+        ],
+        "got": "68520-6",
+        "verdict": "correct"
+      },
+      {
+        "item": "peu d.intérêt",
+        "expected": [
+          "44250-9"
+        ],
+        "got": "44250-9",
+        "verdict": "correct"
+      },
+      {
+        "item": "triste",
+        "expected": [
+          "44255-8"
+        ],
+        "got": "44255-8",
+        "verdict": "correct"
+      },
+      {
+        "item": "^poids",
+        "expected": [
+          "29463-7",
+          "3141-9"
+        ],
+        "verdict": "missing"
+      },
+      {
+        "item": "^taille",
+        "expected": [
+          "8302-2"
+        ],
+        "got": "8302-2",
+        "verdict": "correct"
+      },
+      {
+        "item": "imc|indice de masse corporelle",
+        "expected": [
+          "39156-5"
+        ],
+        "got": "39156-5",
+        "verdict": "correct"
+      },
+      {
+        "item": "tour de taille",
+        "expected": [
+          "8280-0"
+        ],
+        "verdict": "missing"
+      },
+      {
+        "item": "fréquence cardiaque",
+        "expected": [
+          "8867-4"
+        ],
+        "got": "8867-4",
+        "verdict": "correct"
+      },
+      {
+        "item": "systolique",
+        "expected": [
+          "8480-6",
+          "8459-0"
+        ],
+        "got": "8459-0",
+        "verdict": "correct"
+      },
+      {
+        "item": "diastolique",
+        "expected": [
+          "8462-4",
+          "8453-3"
+        ],
+        "got": "8453-3",
+        "verdict": "correct"
+      },
+      {
+        "item": "hémoglobine glyquée|hba1c",
+        "expected": [
+          "4548-4"
+        ],
+        "got": "4548-4",
+        "verdict": "correct"
+      },
+      {
+        "item": "glycémie à jeun",
+        "expected": [
+          "1558-6"
+        ],
+        "verdict": "missing"
+      },
+      {
+        "item": "cholestérol ldl",
+        "expected": [
+          "13457-7",
+          "18262-6",
+          "2089-1"
+        ],
+        "verdict": "missing"
+      },
+      {
+        "item": "créatinin(é|e)mie",
+        "expected": [
+          "14682-9"
+        ],
+        "verdict": "missing"
+      },
+      {
+        "item": "débit de filtration glomérulaire",
+        "expected": [
+          "98979-8",
+          "62238-1"
+        ],
+        "got": "98979-8",
+        "verdict": "correct"
+      },
+      {
+        "item": "albuminurie",
+        "expected": [
+          "32294-1"
+        ],
+        "got": "32294-1",
+        "verdict": "correct"
+      }
+    ]
+  }
+}

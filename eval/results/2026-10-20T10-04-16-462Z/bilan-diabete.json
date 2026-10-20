@@ -1,0 +1,1401 @@
+{
+  "questionnaire": {
+    "resourceType": "Questionnaire",
+    "status": "draft",
+    "name": "DT2BA",
+    "title": "Bilan annuel de suivi — Diabète de type 2",
+    "item": [
+      {
+        "linkId": "nom",
+        "text": "Nom",
+        "type": "string"
+      },
+      {
+        "linkId": "prenom",
+        "text": "Prénom",
+        "type": "string"
+      },
+      {
+        "linkId": "dob",
+        "text": "Date de naissance",
+        "type": "date",
+        "code": [
+          {
+            "system": "http://loinc.org",
+            "code": "21112-8",
+            "display": "Birth date"
+          }
+        ]
+      },
+      {
+        "linkId": "sexe",
+        "text": "Sexe",
+        "type": "choice",
+        "code": [
+          {
+            "system": "http://loinc.org",
+            "code": "46098-0",
+            "display": "Sex"
+          }
+        ],
+        "answerOption": [
+          {
+            "valueCoding": {
+              "system": "http://loinc.org",
+              "code": "LA3-6",
+              "display": "Female"
+            }
+          },
+          {
+            "valueCoding": {
+              "system": "http://loinc.org",
+              "code": "LA2-8",
+              "display": "Male"
+            }
+          }
+        ]
+      },
+      {
+        "linkId": "date-consult",
+        "text": "Date de la consultation",
+        "type": "date"
+      },
+      {
+        "linkId": "A",
+        "text": "A · ANTÉCÉDENTS",
+        "type": "group",
+        "item": [
+          {
+            "linkId": "a-annee",
+            "text": "Année du diagnostic du diabète",
+            "type": "integer"
+          },
+          {
+            "linkId": "a-famille",
+            "text": "Un de vos parents, frères ou sœurs a-t-il un diabète ?",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueString": "Oui"
+              },
+              {
+                "valueString": "Non"
+              },
+              {
+                "valueString": "Je ne sais pas"
+              }
+            ]
+          },
+          {
+            "linkId": "a-maladies",
+            "text": "Avez-vous l'une des maladies suivantes ? (cochez tout ce qui s'applique)",
+            "type": "choice",
+            "repeats": true,
+            "answerOption": [
+              {
+                "valueString": "Hypertension artérielle"
+              },
+              {
+                "valueString": "Excès de cholestérol"
+              },
+              {
+                "valueString": "Infarctus du myocarde ou angine de poitrine"
+              },
+              {
+                "valueString": "Accident vasculaire cérébral"
+              },
+              {
+                "valueString": "Artériopathie des membres inférieurs"
+              },
+              {
+                "valueString": "Insuffisance rénale chronique"
+              },
+              {
+                "valueString": "Aucune de ces maladies"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "linkId": "B",
+        "text": "B · TRAITEMENTS ACTUELS",
+        "type": "group",
+        "item": [
+          {
+            "linkId": "b-meds",
+            "text": "Quels médicaments prenez-vous pour votre diabète ? (cochez tout ce qui s'applique)",
+            "type": "choice",
+            "repeats": true,
+            "answerOption": [
+              {
+                "valueString": "Metformine"
+              },
+              {
+                "valueString": "Sulfamide hypoglycémiant"
+              },
+              {
+                "valueString": "Inhibiteur de la DPP-4 (gliptine)"
+              },
+              {
+                "valueString": "Agoniste du récepteur du GLP-1"
+              },
+              {
+                "valueString": "Inhibiteur du SGLT2 (gliflozine)"
+              },
+              {
+                "valueString": "Insuline"
+              },
+              {
+                "valueString": "Aucun médicament"
+              }
+            ]
+          },
+          {
+            "linkId": "b-insuline",
+            "text": "Si insuline : nombre d'injections par jour",
+            "type": "integer"
+          },
+          {
+            "linkId": "b-autres",
+            "text": "Autres médicaments pris régulièrement",
+            "type": "text"
+          },
+          {
+            "linkId": "b-allergie",
+            "text": "Êtes-vous allergique à un médicament ?",
+            "type": "boolean"
+          },
+          {
+            "linkId": "b-allergie-detail",
+            "text": "Si oui, précisez le médicament et la réaction",
+            "type": "string",
+            "enableWhen": [
+              {
+                "question": "b-allergie",
+                "operator": "=",
+                "answerBoolean": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "linkId": "C",
+        "text": "C · AUTOSURVEILLANCE ET HYPOGLYCÉMIES",
+        "type": "group",
+        "item": [
+          {
+            "linkId": "c-freq",
+            "text": "À quelle fréquence mesurez-vous votre glycémie capillaire ?",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueString": "Jamais"
+              },
+              {
+                "valueString": "Moins d'une fois par jour"
+              },
+              {
+                "valueString": "1 à 3 fois par jour"
+              },
+              {
+                "valueString": "Plus de 3 fois par jour"
+              }
+            ]
+          },
+          {
+            "linkId": "c-hypo",
+            "text": "Combien d'hypoglycémies (glycémie inférieure à 0,70 g/L ou malaise typique) avez-vous eues au cours des 3 derniers mois ?",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueString": "Aucune"
+              },
+              {
+                "valueString": "1 ou 2"
+              },
+              {
+                "valueString": "3 ou plus"
+              }
+            ]
+          },
+          {
+            "linkId": "c-severe",
+            "text": "Avez-vous eu une hypoglycémie sévère ayant nécessité l'aide d'une autre personne au cours des 12 derniers mois ?",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "linkId": "D",
+        "text": "D · SYMPTÔMES ACTUELS",
+        "type": "group",
+        "item": [
+          {
+            "linkId": "d-intro",
+            "text": "Au cours du dernier mois, avez-vous ressenti :",
+            "type": "display"
+          },
+          {
+            "linkId": "d-1",
+            "text": "Une soif excessive",
+            "type": "boolean"
+          },
+          {
+            "linkId": "d-2",
+            "text": "Un besoin d'uriner fréquent, y compris la nuit",
+            "type": "boolean"
+          },
+          {
+            "linkId": "d-3",
+            "text": "Une vision trouble",
+            "type": "boolean"
+          },
+          {
+            "linkId": "d-4",
+            "text": "Des fourmillements, des brûlures ou un engourdissement des pieds",
+            "type": "boolean"
+          },
+          {
+            "linkId": "d-5",
+            "text": "Une plaie ou une blessure du pied qui ne guérit pas",
+            "type": "boolean"
+          },
+          {
+            "linkId": "d-6",
+            "text": "Une douleur dans la poitrine à l'effort",
+            "type": "boolean"
+          }
+        ]
+      },
+      {
+        "linkId": "E",
+        "text": "E · MODE DE VIE",
+        "type": "group",
+        "item": [
+          {
+            "linkId": "e-tabac",
+            "text": "Concernant le tabac, vous êtes :",
+            "type": "choice",
+            "code": [
+              {
+                "system": "http://loinc.org",
+                "code": "72166-2",
+                "display": "Tobacco smoking status"
+              }
+            ],
+            "answerOption": [
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA18976-3",
+                  "display": "Current every day smoker"
+                }
+              },
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA18977-1",
+                  "display": "Current some day smoker"
+                }
+              },
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA15920-4",
+                  "display": "Former smoker"
+                }
+              },
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA18978-9",
+                  "display": "Never smoker"
+                }
+              }
+            ]
+          },
+          {
+            "linkId": "e-activite",
+            "text": "Activité physique d'intensité modérée (marche rapide, vélo…) : minutes par semaine",
+            "type": "integer",
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                "valueCoding": {
+                  "system": "http://unitsofmeasure.org",
+                  "code": "min/wk",
+                  "display": "min/wk"
+                }
+              }
+            ]
+          },
+          {
+            "linkId": "e-conseils",
+            "text": "Suivez-vous des conseils alimentaires adaptés à votre diabète ?",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueString": "Oui"
+              },
+              {
+                "valueString": "Non"
+              },
+              {
+                "valueString": "Parfois"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "linkId": "F",
+        "text": "F · CONSOMMATION D'ALCOOL (AUDIT-C)",
+        "type": "group",
+        "code": [
+          {
+            "system": "http://loinc.org",
+            "code": "72109-2",
+            "display": "Alcohol Use Disorder Identification Test - Consumption [AUDIT-C]"
+          }
+        ],
+        "item": [
+          {
+            "linkId": "f-intro",
+            "text": "Un verre standard correspond à 10 g d'alcool pur : 25 cl de bière à 5 %, 10 cl de vin à 12 % ou 3 cl d'alcool fort à 40 %.",
+            "type": "display"
+          },
+          {
+            "linkId": "audit-1",
+            "text": "1. Quelle est la fréquence de votre consommation d'alcool ?",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueString": "Jamais (0)"
+              },
+              {
+                "valueString": "Une fois par mois ou moins (1)"
+              },
+              {
+                "valueString": "2 à 4 fois par mois (2)"
+              },
+              {
+                "valueString": "2 à 3 fois par semaine (3)"
+              },
+              {
+                "valueString": "Au moins 4 fois par semaine (4)"
+              }
+            ]
+          },
+          {
+            "linkId": "audit-2",
+            "text": "2. Combien de verres contenant de l'alcool consommez-vous un jour typique où vous buvez ?",
+            "type": "choice",
+            "code": [
+              {
+                "system": "http://loinc.org",
+                "code": "68519-8",
+                "display": "How many standard drinks containing alcohol do you have on a typical day?"
+              }
+            ],
+            "answerOption": [
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA15694-5",
+                  "display": "1 or 2"
+                },
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+                    "valueDecimal": 0
+                  }
+                ]
+              },
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA15695-2",
+                  "display": "3 or 4"
+                },
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+                    "valueDecimal": 1
+                  }
+                ]
+              },
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA18930-0",
+                  "display": "5 or 6"
+                },
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+                    "valueDecimal": 2
+                  }
+                ]
+              },
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA18931-8",
+                  "display": "7 to 9"
+                },
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+                    "valueDecimal": 3
+                  }
+                ]
+              },
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA18932-6",
+                  "display": "10 or more"
+                },
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+                    "valueDecimal": 4
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "linkId": "audit-3",
+            "text": "3. Avec quelle fréquence buvez-vous six verres ou davantage lors d'une même occasion ?",
+            "type": "choice",
+            "code": [
+              {
+                "system": "http://loinc.org",
+                "code": "68520-6",
+                "display": "How often do you have 6 or more drinks on 1 occasion?"
+              }
+            ],
+            "answerOption": [
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA6270-8",
+                  "display": "Never"
+                },
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+                    "valueDecimal": 0
+                  }
+                ]
+              },
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA18933-4",
+                  "display": "Less than monthly"
+                },
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+                    "valueDecimal": 1
+                  }
+                ]
+              },
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA18876-5",
+                  "display": "Monthly"
+                },
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+                    "valueDecimal": 2
+                  }
+                ]
+              },
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA18891-4",
+                  "display": "Weekly"
+                },
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+                    "valueDecimal": 3
+                  }
+                ]
+              },
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA18934-2",
+                  "display": "Daily or almost daily"
+                },
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+                    "valueDecimal": 4
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "linkId": "G",
+        "text": "G · MORAL (PHQ-2)",
+        "type": "group",
+        "code": [
+          {
+            "system": "http://loinc.org",
+            "code": "55757-9",
+            "display": "Patient Health Questionnaire 2 item (PHQ-2) [Reported]"
+          }
+        ],
+        "item": [
+          {
+            "linkId": "g-intro",
+            "text": "Au cours des 2 dernières semaines, selon quelle fréquence avez-vous été gêné(e) par les problèmes suivants ?",
+            "type": "display"
+          },
+          {
+            "linkId": "phq2-1",
+            "text": "Peu d'intérêt ou de plaisir à faire les choses",
+            "type": "choice",
+            "code": [
+              {
+                "system": "http://loinc.org",
+                "code": "44250-9",
+                "display": "Little interest or pleasure in doing things"
+              }
+            ],
+            "answerOption": [
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA6568-5",
+                  "display": "Not at all"
+                },
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+                    "valueDecimal": 0
+                  }
+                ]
+              },
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA6569-3",
+                  "display": "Several days"
+                },
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+                    "valueDecimal": 1
+                  }
+                ]
+              },
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA6570-1",
+                  "display": "More than half the days"
+                },
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+                    "valueDecimal": 2
+                  }
+                ]
+              },
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA6571-9",
+                  "display": "Nearly every day"
+                },
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+                    "valueDecimal": 3
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "linkId": "phq2-2",
+            "text": "Être triste, déprimé(e) ou désespéré(e)",
+            "type": "choice",
+            "code": [
+              {
+                "system": "http://loinc.org",
+                "code": "44255-8",
+                "display": "Feeling down, depressed, or hopeless"
+              }
+            ],
+            "answerOption": [
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA6568-5",
+                  "display": "Not at all"
+                },
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+                    "valueDecimal": 0
+                  }
+                ]
+              },
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA6569-3",
+                  "display": "Several days"
+                },
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+                    "valueDecimal": 1
+                  }
+                ]
+              },
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA6570-1",
+                  "display": "More than half the days"
+                },
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+                    "valueDecimal": 2
+                  }
+                ]
+              },
+              {
+                "valueCoding": {
+                  "system": "http://loinc.org",
+                  "code": "LA6571-9",
+                  "display": "Nearly every day"
+                },
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/ordinalValue",
+                    "valueDecimal": 3
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "linkId": "H",
+        "text": "H · EXAMEN CLINIQUE — rempli par le soignant",
+        "type": "group",
+        "item": [
+          {
+            "linkId": "h-poids",
+            "text": "Poids",
+            "type": "decimal",
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                "valueCoding": {
+                  "system": "http://unitsofmeasure.org",
+                  "code": "kg",
+                  "display": "kg"
+                }
+              }
+            ]
+          },
+          {
+            "linkId": "h-taille",
+            "text": "Taille",
+            "type": "decimal",
+            "code": [
+              {
+                "system": "http://loinc.org",
+                "code": "8302-2",
+                "display": "Body height"
+              }
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                "valueCoding": {
+                  "system": "http://unitsofmeasure.org",
+                  "code": "cm",
+                  "display": "cm"
+                }
+              }
+            ]
+          },
+          {
+            "linkId": "h-imc",
+            "text": "IMC",
+            "type": "decimal",
+            "code": [
+              {
+                "system": "http://loinc.org",
+                "code": "39156-5",
+                "display": "Body mass index (BMI) [Ratio]"
+              }
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                "valueCoding": {
+                  "system": "http://unitsofmeasure.org",
+                  "code": "kg/m2",
+                  "display": "kg/m2"
+                }
+              }
+            ]
+          },
+          {
+            "linkId": "h-taille-tour",
+            "text": "Tour de taille",
+            "type": "decimal",
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                "valueCoding": {
+                  "system": "http://unitsofmeasure.org",
+                  "code": "cm",
+                  "display": "cm"
+                }
+              }
+            ]
+          },
+          {
+            "linkId": "h-fc",
+            "text": "Fréquence cardiaque",
+            "type": "integer",
+            "code": [
+              {
+                "system": "http://loinc.org",
+                "code": "8867-4",
+                "display": "Heart rate"
+              }
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                "valueCoding": {
+                  "system": "http://unitsofmeasure.org",
+                  "code": "/min",
+                  "display": "/min"
+                }
+              }
+            ]
+          },
+          {
+            "linkId": "h-sys",
+            "text": "Pression artérielle en position assise : systolique",
+            "type": "integer",
+            "code": [
+              {
+                "system": "http://loinc.org",
+                "code": "8459-0",
+                "display": "Systolic blood pressure--sitting"
+              }
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                "valueCoding": {
+                  "system": "http://unitsofmeasure.org",
+                  "code": "mm[Hg]",
+                  "display": "mm[Hg]"
+                }
+              }
+            ]
+          },
+          {
+            "linkId": "h-dia",
+            "text": "Pression artérielle en position assise : diastolique",
+            "type": "integer",
+            "code": [
+              {
+                "system": "http://loinc.org",
+                "code": "8453-3",
+                "display": "Diastolic blood pressure--sitting"
+              }
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                "valueCoding": {
+                  "system": "http://unitsofmeasure.org",
+                  "code": "mm[Hg]",
+                  "display": "mm[Hg]"
+                }
+              }
+            ]
+          },
+          {
+            "linkId": "h-mono",
+            "text": "Sensibilité des pieds au monofilament 10 g",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueString": "Normale"
+              },
+              {
+                "valueString": "Diminuée"
+              },
+              {
+                "valueString": "Absente"
+              }
+            ]
+          },
+          {
+            "linkId": "h-pouls",
+            "text": "Pouls pédieux",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueString": "Perçus des deux côtés"
+              },
+              {
+                "valueString": "Absents ou diminués"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "linkId": "I",
+        "text": "I · DERNIERS RÉSULTATS BIOLOGIQUES",
+        "type": "group",
+        "item": [
+          {
+            "linkId": "i-hba1c",
+            "text": "Hémoglobine glyquée (HbA1c)",
+            "type": "group",
+            "item": [
+              {
+                "linkId": "i-hba1c-v",
+                "text": "Résultat (%)",
+                "type": "decimal",
+                "code": [
+                  {
+                    "system": "http://loinc.org",
+                    "code": "4548-4",
+                    "display": "Hemoglobin A1c/Hemoglobin.total in Blood"
+                  }
+                ],
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                    "valueCoding": {
+                      "system": "http://unitsofmeasure.org",
+                      "code": "%",
+                      "display": "%"
+                    }
+                  }
+                ]
+              },
+              {
+                "linkId": "i-hba1c-d",
+                "text": "Date du prélèvement",
+                "type": "date"
+              }
+            ]
+          },
+          {
+            "linkId": "i-gly",
+            "text": "Glycémie à jeun",
+            "type": "group",
+            "item": [
+              {
+                "linkId": "i-gly-v",
+                "text": "Résultat (g/L)",
+                "type": "decimal",
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                    "valueCoding": {
+                      "system": "http://unitsofmeasure.org",
+                      "code": "g/L",
+                      "display": "g/L"
+                    }
+                  }
+                ]
+              },
+              {
+                "linkId": "i-gly-d",
+                "text": "Date du prélèvement",
+                "type": "date"
+              }
+            ]
+          },
+          {
+            "linkId": "i-ldl",
+            "text": "Cholestérol LDL",
+            "type": "group",
+            "item": [
+              {
+                "linkId": "i-ldl-v",
+                "text": "Résultat (g/L)",
+                "type": "decimal",
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                    "valueCoding": {
+                      "system": "http://unitsofmeasure.org",
+                      "code": "g/L",
+                      "display": "g/L"
+                    }
+                  }
+                ]
+              },
+              {
+                "linkId": "i-ldl-d",
+                "text": "Date du prélèvement",
+                "type": "date"
+              }
+            ]
+          },
+          {
+            "linkId": "i-creat",
+            "text": "Créatininémie",
+            "type": "group",
+            "item": [
+              {
+                "linkId": "i-creat-v",
+                "text": "Résultat (µmol/L)",
+                "type": "decimal",
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                    "valueCoding": {
+                      "system": "http://unitsofmeasure.org",
+                      "code": "umol/L",
+                      "display": "µmol/L"
+                    }
+                  }
+                ]
+              },
+              {
+                "linkId": "i-creat-d",
+                "text": "Date du prélèvement",
+                "type": "date"
+              }
+            ]
+          },
+          {
+            "linkId": "i-dfg",
+            "text": "Débit de filtration glomérulaire estimé (CKD-EPI)",
+            "type": "group",
+            "item": [
+              {
+                "linkId": "i-dfg-v",
+                "text": "Résultat (mL/min/1,73 m²)",
+                "type": "decimal",
+                "code": [
+                  {
+                    "system": "http://loinc.org",
+                    "code": "98979-8",
+                    "display": "Glomerular filtration rate [Volume Rate/Area] in Serum, Plasma or Blood by Creatinine-based formula (CKD-EPI 2021)/1.73 sq M"
+                  }
+                ],
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                    "valueCoding": {
+                      "system": "http://unitsofmeasure.org",
+                      "code": "mL/min/{1.73_m2}",
+                      "display": "mL/min/1.73 m2"
+                    }
+                  }
+                ]
+              },
+              {
+                "linkId": "i-dfg-d",
+                "text": "Date du prélèvement",
+                "type": "date"
+              }
+            ]
+          },
+          {
+            "linkId": "i-acr",
+            "text": "Rapport albuminurie/créatininurie",
+            "type": "group",
+            "item": [
+              {
+                "linkId": "i-acr-v",
+                "text": "Résultat (mg/mmol)",
+                "type": "decimal",
+                "code": [
+                  {
+                    "system": "http://loinc.org",
+                    "code": "32294-1",
+                    "display": "Albumin/Creatinine [Ratio] in Urine"
+                  }
+                ],
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                    "valueCoding": {
+                      "system": "http://unitsofmeasure.org",
+                      "code": "mg/mmol",
+                      "display": "mg/mmol"
+                    }
+                  }
+                ]
+              },
+              {
+                "linkId": "i-acr-d",
+                "text": "Date du prélèvement",
+                "type": "date"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "linkId": "J",
+        "text": "J · DÉPISTAGE DES COMPLICATIONS ET PRÉVENTION",
+        "type": "group",
+        "item": [
+          {
+            "linkId": "j-fond-date",
+            "text": "Date du dernier examen du fond d'œil",
+            "type": "date",
+            "code": [
+              {
+                "system": "http://loinc.org",
+                "code": "55400-6",
+                "display": "Date of last eye examination"
+              }
+            ]
+          },
+          {
+            "linkId": "j-fond-res",
+            "text": "Résultat du dernier examen du fond d'œil",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueString": "Pas de rétinopathie"
+              },
+              {
+                "valueString": "Rétinopathie diabétique"
+              },
+              {
+                "valueString": "Non connu"
+              }
+            ]
+          },
+          {
+            "linkId": "j-grippe",
+            "text": "Vaccination contre la grippe saisonnière cette année",
+            "type": "boolean"
+          },
+          {
+            "linkId": "j-etp",
+            "text": "Le patient a-t-il participé à un programme d'éducation thérapeutique ?",
+            "type": "choice",
+            "answerOption": [
+              {
+                "valueString": "Oui"
+              },
+              {
+                "valueString": "Non"
+              },
+              {
+                "valueString": "Proposé, en attente"
+              }
+            ]
+          },
+          {
+            "linkId": "j-objectifs",
+            "text": "Objectifs convenus avec le patient pour l'année à venir",
+            "type": "text"
+          }
+        ]
+      }
+    ]
+  },
+  "valid": true,
+  "issues": [
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[2].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[3].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[3].answerOption[0].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[3].answerOption[1].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[9].item[0].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[9].item[0].answerOption[0].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[9].item[0].answerOption[1].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[9].item[0].answerOption[2].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[9].item[0].answerOption[3].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[10].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[10].item[2].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[10].item[2].answerOption[0].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[10].item[2].answerOption[1].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[10].item[2].answerOption[2].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[10].item[2].answerOption[3].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[10].item[2].answerOption[4].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[10].item[3].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[10].item[3].answerOption[0].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[10].item[3].answerOption[1].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[10].item[3].answerOption[2].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[10].item[3].answerOption[3].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[10].item[3].answerOption[4].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[11].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[11].item[1].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[11].item[1].answerOption[0].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[11].item[1].answerOption[1].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[11].item[1].answerOption[2].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[11].item[1].answerOption[3].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[11].item[2].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[11].item[2].answerOption[0].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[11].item[2].answerOption[1].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[11].item[2].answerOption[2].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[11].item[2].answerOption[3].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[12].item[1].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[12].item[2].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[12].item[4].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[12].item[5].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[12].item[6].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[13].item[0].item[0].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[13].item[4].item[0].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[13].item[5].item[0].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[14].item[0].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)",
+      "location": "Questionnaire"
+    }
+  ],
+  "iterations": 2,
+  "model": "claude-sonnet-5-5",
+  "usage": {
+    "inputTokens": 6,
+    "outputTokens": 8903,
+    "cacheReadTokens": 11883,
+    "cacheWriteTokens": 14015
+  },
+  "durationMs": 45756
+}

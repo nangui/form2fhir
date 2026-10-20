@@ -67,6 +67,16 @@ describe('scoreCodes', () => {
     })
   })
 
+  it('falls back to the group text when the question itself is generic ("Result")', () => {
+    const labs = { resourceType: 'Questionnaire', item: [
+      { linkId: 'g1', type: 'group', text: 'Fasting glucose', item: [{ linkId: 'r1', type: 'decimal', text: 'Result', code: [{ system: 'http://loinc.org', code: '1558-6' }] }] },
+      { linkId: 'g2', type: 'group', text: 'LDL', item: [{ linkId: 'r2', type: 'decimal', text: 'Result' }] }
+    ] }
+
+    expect(scoreCodes(labs, [{ item: 'ldl', codes: ['13457-7'] }, { item: 'glucose', codes: ['1558-6'] }]))
+      .toMatchObject({ correct: 1, missing: 1 })
+  })
+
   it('matches item text case-insensitively, as a regular expression', () => {
     expect(scoreCodes(q, [{ item: '^HEART', codes: ['8867-4'] }]).correct).toBe(1)
   })

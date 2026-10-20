@@ -1,0 +1,246 @@
+{
+  "questionnaire": {
+    "resourceType": "Questionnaire",
+    "status": "draft",
+    "name": "QuestionnaireSanteSportifMineur",
+    "title": "Questionnaire relatif à l'état de santé du sportif mineur",
+    "item": [
+      {
+        "linkId": "intro",
+        "type": "display",
+        "text": "Faire du sport : c'est recommandé pour tous. En as-tu parlé avec un médecin ? T'a-t-il examiné(e) pour te conseiller ? Ce questionnaire n'est pas un contrôle. Tu réponds par OUI ou par NON, mais il n'y a pas de bonnes ou de mauvaises réponses. Tu peux regarder ton carnet de santé et demander à tes parents de t'aider."
+      },
+      {
+        "linkId": "sex",
+        "type": "choice",
+        "code": [
+          {
+            "system": "http://loinc.org",
+            "code": "76689-9",
+            "display": "Sex assigned at birth"
+          }
+        ],
+        "text": "Tu es une fille / un garçon",
+        "answerOption": [
+          {
+            "valueCoding": {
+              "system": "http://loinc.org",
+              "code": "LA3-6",
+              "display": "Female"
+            }
+          },
+          {
+            "valueCoding": {
+              "system": "http://loinc.org",
+              "code": "LA2-8",
+              "display": "Male"
+            }
+          }
+        ]
+      },
+      {
+        "linkId": "age",
+        "type": "integer",
+        "text": "Ton âge (ans)",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+            "valueCoding": {
+              "system": "http://unitsofmeasure.org",
+              "code": "a"
+            }
+          }
+        ]
+      },
+      {
+        "linkId": "g1",
+        "type": "group",
+        "text": "Depuis l'année dernière",
+        "item": [
+          {
+            "linkId": "q1",
+            "type": "boolean",
+            "text": "Es-tu allé(e) à l'hôpital pendant toute une journée ou plusieurs jours ?"
+          },
+          {
+            "linkId": "q2",
+            "type": "boolean",
+            "text": "As-tu été opéré(e) ?"
+          },
+          {
+            "linkId": "q3",
+            "type": "boolean",
+            "text": "As-tu beaucoup plus grandi que les autres années ?"
+          },
+          {
+            "linkId": "q4",
+            "type": "boolean",
+            "text": "As-tu beaucoup maigri ou grossi ?"
+          },
+          {
+            "linkId": "q5",
+            "type": "boolean",
+            "text": "As-tu eu la tête qui tourne pendant un effort ?"
+          },
+          {
+            "linkId": "q6",
+            "type": "boolean",
+            "text": "As-tu perdu connaissance ou es-tu tombé sans te souvenir de ce qui s'était passé ?"
+          },
+          {
+            "linkId": "q7",
+            "type": "boolean",
+            "text": "As-tu reçu un ou plusieurs chocs violents qui t'ont obligé à interrompre un moment une séance de sport ?"
+          },
+          {
+            "linkId": "q8",
+            "type": "boolean",
+            "text": "As-tu eu beaucoup de mal à respirer pendant un effort par rapport à d'habitude ?"
+          },
+          {
+            "linkId": "q9",
+            "type": "boolean",
+            "text": "As-tu eu beaucoup de mal à respirer après un effort ?"
+          },
+          {
+            "linkId": "q10",
+            "type": "boolean",
+            "text": "As-tu eu mal dans la poitrine ou des palpitations (le cœur qui bat très vite) ?"
+          },
+          {
+            "linkId": "q11",
+            "type": "boolean",
+            "text": "As-tu commencé à prendre un nouveau médicament tous les jours et pour longtemps ?"
+          },
+          {
+            "linkId": "q12",
+            "type": "boolean",
+            "text": "As-tu arrêté le sport à cause d'un problème de santé pendant un mois ou plus ?"
+          }
+        ]
+      },
+      {
+        "linkId": "g2",
+        "type": "group",
+        "text": "Depuis un certain temps (plus de 2 semaines)",
+        "item": [
+          {
+            "linkId": "q13",
+            "type": "boolean",
+            "text": "Te sens-tu très fatigué(e) ?"
+          },
+          {
+            "linkId": "q14",
+            "type": "boolean",
+            "text": "As-tu du mal à t'endormir ou te réveilles-tu souvent dans la nuit ?"
+          },
+          {
+            "linkId": "q15",
+            "type": "boolean",
+            "text": "Sens-tu que tu as moins faim ? que tu manges moins ?"
+          },
+          {
+            "linkId": "q16",
+            "type": "boolean",
+            "text": "Te sens-tu triste ou inquiet ?"
+          },
+          {
+            "linkId": "q17",
+            "type": "boolean",
+            "text": "Pleures-tu plus souvent ?"
+          },
+          {
+            "linkId": "q18",
+            "type": "boolean",
+            "text": "Ressens-tu une douleur ou un manque de force à cause d'une blessure que tu t'es faite cette année ?"
+          }
+        ]
+      },
+      {
+        "linkId": "g3",
+        "type": "group",
+        "text": "Aujourd'hui",
+        "item": [
+          {
+            "linkId": "q19",
+            "type": "boolean",
+            "text": "Penses-tu quelquefois à arrêter de faire du sport ou à changer de sport ?"
+          },
+          {
+            "linkId": "q20",
+            "type": "boolean",
+            "text": "Penses-tu avoir besoin de voir ton médecin pour continuer le sport ?"
+          },
+          {
+            "linkId": "q21",
+            "type": "boolean",
+            "text": "Souhaites-tu signaler quelque chose de plus concernant ta santé ?"
+          }
+        ]
+      },
+      {
+        "linkId": "g4",
+        "type": "group",
+        "text": "Questions à faire remplir par tes parents",
+        "item": [
+          {
+            "linkId": "q22",
+            "type": "boolean",
+            "text": "Quelqu'un dans votre famille proche a-t-il eu une maladie grave du cœur ou du cerveau, ou est-il décédé subitement avant l'âge de 50 ans ?"
+          },
+          {
+            "linkId": "q23",
+            "type": "boolean",
+            "text": "Etes-vous inquiet pour son poids ? Trouvez-vous qu'il se nourrit trop ou pas assez ?"
+          },
+          {
+            "linkId": "q24",
+            "type": "boolean",
+            "text": "Avez-vous manqué l'examen de santé prévu à l'âge de votre enfant chez le médecin ? (Cet examen médical est prévu à l'âge de 2 ans, 3 ans, 4 ans, 5 ans, entre 8 et 9 ans, entre 11 et 13 ans et entre 15 et 16 ans.)"
+          }
+        ]
+      },
+      {
+        "linkId": "outro",
+        "type": "display",
+        "text": "Si tu as répondu OUI à une ou plusieurs questions, tu dois consulter un médecin pour qu'il t'examine et voit avec toi quel sport te convient. Au moment de la visite, donne-lui ce questionnaire rempli."
+      }
+    ]
+  },
+  "valid": true,
+  "issues": [
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[1].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[1].answerOption[0].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[1].answerOption[1].value.ofType(Coding)"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)",
+      "location": "Questionnaire"
+    }
+  ],
+  "iterations": 2,
+  "model": "claude-sonnet-5-5",
+  "usage": {
+    "inputTokens": 6,
+    "outputTokens": 2306,
+    "cacheReadTokens": 10674,
+    "cacheWriteTokens": 9384
+  },
+  "durationMs": 16559
+}

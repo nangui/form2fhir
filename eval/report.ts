@@ -17,7 +17,10 @@ export interface EvalRow {
   error?: string
 }
 
-/** An item of the form (found by a case-insensitive regex on its text) and the LOINC codes accepted for it. */
+/**
+ * An item of the form and the LOINC codes accepted for it. The item is found by a case-insensitive
+ * regex on its text or, failing that, on its group's text ("Glycémie à jeun" › "Résultat").
+ */
 export interface ExpectedCode {
   item: string
   codes: string[]
@@ -31,6 +34,7 @@ export interface CodeCheck {
 }
 
 interface Item { type?: string, text?: string, code?: { system?: string, code?: string }[], item?: Item[] }
+interface Question { item: Item, groups: string }
 
 // USD per million tokens (Claude API list prices; 5-minute cache writes cost 1.25× input).
 const PRICES: Record<string, { input: number, output: number, cacheRead: number }> = {
@@ -53,11 +57,13 @@ export function estimateCostUsd(model: string, usage: TokenUsage): number | unde
  * "missing" covers both an uncoded item and an item the agent dropped or reworded.
  */
 export function scoreCodes(questionnaire: unknown, expected: ExpectedCode[]) {
-  const items = questionItems((questionnaire as { item?: Item[] } | undefined)?.item)
+  const questions = questionItems((questionnaire as { item?: Item[] } | undefined)?.item, '')
   const used = new Set<Item>()
   const checks = expected.map((entry): CodeCheck => {
     const pattern = new RegExp(entry.item, 'i')
-    const item = items.find(candidate => !used.has(candidate) && pattern.test(candidate.text ?? ''))
+    const free = questions.filter(question => !used.has(question.item))
+    const item = (free.find(question => pattern.test(question.item.text ?? ''))
+      ?? free.find(question => pattern.test(question.groups)))?.item
     if (item) used.add(item)
     const got = item?.code?.find(coding => coding.system === 'http://loinc.org' && coding.code)?.code
     const verdict = got === undefined ? 'missing' : entry.codes.includes(got) ? 'correct' : 'wrong'
@@ -96,10 +102,10 @@ function accuracy(codes: EvalRow['codes']): string {
   return `${codes.correct}/${codes.correct + codes.wrong + codes.missing}${codes.wrong ? ` (${codes.wrong} wrong)` : ''}`
 }
 
-function questionItems(items: Item[] | undefined): Item[] {
+function questionItems(items: Item[] | undefined, groups: string): Question[] {
   return (items ?? []).flatMap(item => [
-    ...(item.type === 'group' || item.type === 'display' ? [] : [item]),
-    ...questionItems(item.item)
+    ...(item.type === 'group' || item.type === 'display' ? [] : [{ item, groups }]),
+    ...questionItems(item.item, item.type === 'group' ? `${groups} › ${item.text ?? ''}` : groups)
   ])
 }
 
