@@ -6,7 +6,7 @@ import oxygen from '../../test/recordings/loinc-oxygen-saturation.json'
 import noResults from '../../test/recordings/loinc-no-results.json'
 import phq9Form from '../../test/recordings/loinc-form-phq9.json'
 import { ServiceUnavailableError, ToolInputError } from './errors'
-import { collectCodes, collectEvidence, parseFormDefinition, parseSearchInput, parseSearchResponse, searchLoinc } from './loinc'
+import { collectCodes, collectEvidence, mergeScores, parseFormDefinition, parseSearchInput, parseSearchResponse, searchLoinc } from './loinc'
 
 const BASE_URL = 'https://loinc.test/search'
 
@@ -269,7 +269,16 @@ describe('collectEvidence', () => {
     expect(evidence.panels.get('44249-1')!.has('44260-8')).toBe(true)
   })
 
-  it('keeps scores per question, and drops one when two sources disagree rather than guessing', () => {
+  it('marks a score disputed only when two sources give different numbers', () => {
+    expect(mergeScores(undefined, 1)).toBe(1)
+    expect(mergeScores(1, 1)).toBe(1)
+    expect(mergeScores(1, 0)).toBe('disputed')
+    expect(mergeScores(1, null)).toBeNull() // AHC HRSN embeds Hunger Vital Sign without its scores
+    expect(mergeScores(null, 1)).toBeNull()
+    expect(mergeScores('disputed', null)).toBe('disputed')
+  })
+
+  it('keeps scores per question, and marks a score disputed when two sources disagree', () => {
     const other = { query: 'q', kind: 'question' as const, hits: [
       { code: '1-1', display: 'x', answers: [{ code: 'LA6568-5', display: 'Not at all', score: 5 }] },
       { code: '44250-9', display: 'Little interest', answers: [{ code: 'LA6568-5', display: 'Not at all', score: 7 }] }
@@ -277,7 +286,7 @@ describe('collectEvidence', () => {
     const evidence = collectEvidence([panelResult, other])
 
     expect(evidence.answerScores.get('1-1')!.get('LA6568-5')).toBe(5)
-    expect(evidence.answerScores.get('44250-9')!.get('LA6568-5')).toBeNull()
+    expect(evidence.answerScores.get('44250-9')!.get('LA6568-5')).toBe('disputed')
     expect(evidence.answerScores.get('44250-9')!.get('LA6569-3')).toBe(1)
   })
 })

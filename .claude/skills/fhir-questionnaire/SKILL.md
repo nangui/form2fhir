@@ -56,7 +56,7 @@ Sources (check them when in doubt; this page is a summary, not the spec):
 
 ## Extensions we use (core FHIR, accepted by public HAPI)
 - Units: `http://hl7.org/fhir/StructureDefinition/questionnaire-unit` with `valueCoding` (system `http://unitsofmeasure.org`, UCUM code such as `/min`, `mm[Hg]`, `kg`, `Cel`).
-- Answer scores: `http://hl7.org/fhir/StructureDefinition/ordinalValue` with `valueDecimal` on `answerOption`. Enforced in `validate.ts`: a LOINC answer with a known score must carry exactly that weight, weights must be numbers, and a list is either fully weighted or not at all.
+- Answer scores: `http://hl7.org/fhir/StructureDefinition/ordinalValue` with `valueDecimal` on `answerOption`. Enforced in `validate.ts`: a LOINC answer with a known score must carry exactly that weight, weights must be numbers, and a list is either fully weighted or not at all. Only `ordinalValue` may carry a score, once per answer (`itemWeight` and other score extensions are refused: renderers read them too). A score on which two LOINC sources disagree is refused (it cannot be verified).
 - Panel members: a panel search fetches the LOINC form definition (`/loinc_form_definitions?loinc_num=`). Items under a panel code (on `Questionnaire.code` or a group) should use member codes; a stray code is a warning, not an error, because NLM definitions are not exhaustive (AUDIT-C lists 68517-2, printed forms ask 68518-0).
 
 ## Example (minimal, valid on public HAPI)

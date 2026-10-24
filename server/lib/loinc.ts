@@ -23,12 +23,15 @@ export interface SearchEvidence {
   /**
    * Question code → its answers (LA code → LOINC score). Scores belong to a question/answer pair:
    * "Yes" scores 1 on one question and nothing on another. null = LOINC gives no score (e.g.
-   * "Don't know"), or two sources disagree.
+   * "Don't know", or a source without scores, e.g. AHC HRSN embedding Hunger Vital Sign);
+   * 'disputed' = two sources give different numbers, so the score cannot be verified.
    */
-  answerScores: Map<string, Map<string, number | null>>
+  answerScores: Map<string, Map<string, AnswerScore>>
   /** Panel code → the codes of its official questions. */
   panels: Map<string, Set<string>>
 }
+
+export type AnswerScore = number | null | 'disputed'
 
 export interface LoincQueryResult {
   query: string
@@ -90,13 +93,12 @@ export function collectEvidence(results: LoincQueryResult[]): SearchEvidence {
   const add = (hit: LoincHit) => {
     evidence.codes.add(hit.code)
     if (hit.answers?.length) {
-      const scores = evidence.answerScores.get(hit.code) ?? new Map<string, number | null>()
+      const scores = evidence.answerScores.get(hit.code) ?? new Map<string, AnswerScore>()
       for (const answer of hit.answers) {
         evidence.codes.add(answer.code)
         const score = answer.score ?? null
         const known = scores.get(answer.code)
-        // Two sources disagree on this answer's score: check nothing rather than guess.
-        scores.set(answer.code, known === undefined || known === score ? score : null)
+        scores.set(answer.code, mergeScores(known, score))
       }
       evidence.answerScores.set(hit.code, scores)
     }
@@ -107,6 +109,18 @@ export function collectEvidence(results: LoincQueryResult[]): SearchEvidence {
   }
   for (const hit of results.flatMap(result => result.hits)) add(hit)
   return evidence
+}
+
+/**
+ * Two different numbers for the same question/answer pair cannot both be LOINC's score: 'disputed'
+ * (validation refuses it). A source without a score is not a contradiction: the pair is left
+ * unchecked, as panels that embed a scored instrument often drop its scores.
+ */
+export function mergeScores(known: AnswerScore | undefined, score: AnswerScore): AnswerScore {
+  if (known === undefined || known === score) return score
+  if (known === 'disputed' || score === 'disputed') return 'disputed'
+  if (known === null || score === null) return null
+  return 'disputed'
 }
 
 /** LOINC form definition (Clinical Tables /loinc_form_definitions): nested items, flattened. */

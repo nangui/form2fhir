@@ -1,7 +1,7 @@
 import type { ValidationIssue } from '../../shared/types'
 import { ServiceUnavailableError } from './errors'
 import { type HttpOptions, requestSignal } from './http'
-import type { SearchEvidence } from './loinc'
+import type { AnswerScore, SearchEvidence } from './loinc'
 
 export interface ValidationResult {
   valid: boolean
@@ -18,6 +18,13 @@ interface Panel {
 
 const LOINC_SYSTEM = 'http://loinc.org'
 const ORDINAL_VALUE = 'http://hl7.org/fhir/StructureDefinition/ordinalValue'
+// Renderers such as LHC-Forms also read these as answer scores: only ordinalValue is allowed.
+const SCORE_EXTENSIONS = [
+  ORDINAL_VALUE,
+  'http://hl7.org/fhir/StructureDefinition/itemWeight',
+  'http://hl7.org/fhir/StructureDefinition/questionnaire-ordinalValue',
+  'http://hl7.org/fhir/StructureDefinition/iso21090-CO-value'
+]
 // Any other spelling of the LOINC system must not slip past the allowlist.
 const LOINC_SYSTEM_PATTERN = /loinc\.org|^urn:oid:2\.16\.840\.1\.113883\.6\.1$/i
 // rendering-xhtml, rendering-markdown, rendering-style…: all can smuggle markup into the preview.
@@ -165,7 +172,7 @@ function checkAnswerWeights(
   options: unknown[],
   linkId: string,
   path: string,
-  scores: ReadonlyMap<string, number | null> | undefined,
+  scores: ReadonlyMap<string, AnswerScore> | undefined,
   issues: ValidationIssue[]
 ) {
   let coded = 0
@@ -173,11 +180,17 @@ function checkAnswerWeights(
   options.forEach((raw, i) => {
     const option = (raw ?? {}) as Record<string, unknown>
     const coding = option.valueCoding as Record<string, unknown> | undefined
-    if (!coding || typeof coding !== 'object') return
     const optionPath = `${path}.answerOption[${i}]`
+    const scoreUrls = [...scoreExtensionUrls(option), ...(coding && typeof coding === 'object' ? scoreExtensionUrls(coding) : [])]
+    if (scoreUrls.some(url => url !== ORDINAL_VALUE)) {
+      issues.push(localError(`Give answer scores only with the ${ORDINAL_VALUE} extension.`, optionPath))
+    } else if (scoreUrls.length > 1) {
+      issues.push(localError('An answer must carry at most one ordinalValue.', optionPath))
+    }
+    if (!coding || typeof coding !== 'object') return
     const weight = ordinalValue(option) ?? ordinalValue(coding)
     const score = coding.system === LOINC_SYSTEM ? scores?.get(String(coding.code)) : undefined
-    if (scores ? typeof score === 'number' : true) {
+    if (scores ? typeof score === 'number' || score === 'disputed' : true) {
       coded++
       if (weight) weighted++
     }
@@ -187,6 +200,10 @@ function checkAnswerWeights(
     }
     if (score === undefined || score === null) return
     const label = `Answer "${String(coding.code)}" (${String(coding.display ?? '')})`
+    if (score === 'disputed') {
+      issues.push(localError(`${label}: LOINC sources give different scores for this answer to this question, so its score cannot be verified. Leave this answer's code out (use valueString), or leave the item uncoded.`, optionPath))
+      return
+    }
     if (!weight) {
       issues.push(localError(`${label} has LOINC score ${score}: add it as an ordinalValue extension with valueDecimal ${score}.`, optionPath))
     } else if (weight.valueDecimal !== score) {
@@ -196,6 +213,11 @@ function checkAnswerWeights(
   if (weighted > 0 && weighted < coded) {
     issues.push(localError(`Item "${linkId}": either every coded answer carries an ordinalValue or none does (${weighted} of ${coded} do).`, path))
   }
+}
+
+function scoreExtensionUrls(element: Record<string, unknown>): string[] {
+  const extensions = Array.isArray(element.extension) ? element.extension as Record<string, unknown>[] : []
+  return extensions.map(extension => String(extension?.url)).filter(url => SCORE_EXTENSIONS.includes(url))
 }
 
 function ordinalValue(element: Record<string, unknown>): Record<string, unknown> | undefined {

@@ -315,6 +315,29 @@ describe('answer fidelity (ordinal weights)', () => {
     expect(checkQuestionnaire(q, evidence)).toEqual([])
   })
 
+  it('refuses an answer whose LOINC score is disputed between sources, whatever its weight', () => {
+    const disputed = { ...evidence, answerScores: new Map([['44250-9', new Map<string, number | null | 'disputed'>([['LA6568-5', 'disputed'], ['LA6569-3', 1]])]]) }
+
+    for (const weight of [0, 5]) {
+      const issues = checkQuestionnaire(phqItem([scored('LA6568-5', 'Not at all', weight), scored('LA6569-3', 'Several days', 1)]), disputed)
+      expect(issues.map(i => i.message)).toEqual([expect.stringContaining('LOINC sources give different scores')])
+    }
+  })
+
+  it('accepts scores only as one ordinalValue per answer (renderers read other score extensions too)', () => {
+    const withExtensions = (extension: unknown[]) => phqItem([
+      { valueCoding: { system: LOINC, code: 'LA6568-5', display: 'Not at all' }, extension },
+      scored('LA6569-3', 'Several days', 1)
+    ])
+
+    expect(checkQuestionnaire(withExtensions([{ url: 'http://hl7.org/fhir/StructureDefinition/itemWeight', valueDecimal: 42 }, { url: ORDINAL, valueDecimal: 0 }]), evidence).map(i => i.message))
+      .toEqual([`Give answer scores only with the ${ORDINAL} extension.`])
+    expect(checkQuestionnaire(withExtensions([{ url: ORDINAL, valueDecimal: 0 }, { url: ORDINAL, valueDecimal: 42 }]), evidence).map(i => i.message))
+      .toEqual(['An answer must carry at most one ordinalValue.'])
+    const uncoded = phqItem([{ valueString: 'Good', extension: [{ url: 'http://hl7.org/fhir/StructureDefinition/itemWeight', valueDecimal: 42 }] }])
+    expect(checkQuestionnaire(uncoded, evidence).map(i => i.message)).toEqual([`Give answer scores only with the ${ORDINAL} extension.`])
+  })
+
   it('rejects a scale where only some coded answers carry a weight', () => {
     const q = questionnaire([{
       linkId: 'mood',
