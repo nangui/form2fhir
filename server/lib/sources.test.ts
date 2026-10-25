@@ -27,6 +27,12 @@ describe('itemSources', () => {
     expect(itemSources({ hr: 'heart RATE' }, Q, TEXT)[0]!.found).toBe(true)
   })
 
+  it('ignores Unicode forms, typographic quotes and dashes, and does not check very short quotes', () => {
+    const text = { kind: 'text' as const, text: 'Do you feel \u201Cdown\u201D \u2014 most days?\nYes / No' }
+    expect(itemSources({ hr: 'Do you feel "down" - most days?' }, Q, text)[0]!.found).toBe(true)
+    expect(itemSources({ hr: 'Yes' }, Q, text)[0]!.found).toBeNull()
+  })
+
   it('cannot check a PDF or an image', () => {
     expect(itemSources({ hr: 'Heart rate' }, Q, { kind: 'pdf', data: Buffer.from('') })).toEqual([{ linkId: 'hr', excerpt: 'Heart rate', found: null }])
   })

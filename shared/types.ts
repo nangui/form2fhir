@@ -28,7 +28,7 @@ export interface TokenUsage {
 export interface ItemSource {
   linkId: string
   excerpt: string
-  /** Found in the pasted text (true/false); null when the form was a PDF or an image. */
+  /** Found in the pasted text (true/false); null when it cannot be checked (PDF, image, very short quote). */
   found: boolean | null
 }
 
