@@ -4,6 +4,7 @@ import { AgentError, ToolInputError } from './errors'
 import { type FormInput, toContentBlocks } from './input'
 import { collectEvidence, type LoincQueryResult, parseSearchInput, type SearchLoincInput } from './loinc'
 import { LAST_TURN_PROMPT, NUDGE_PROMPT, SYSTEM_PROMPT, TASK_PROMPT, TOOLS } from './prompt'
+import { itemSources } from './sources'
 import type { Evidence, ValidationResult } from './validate'
 
 type Params = Anthropic.Beta.MessageCreateParamsNonStreaming
@@ -28,6 +29,8 @@ const MAX_FORM_TOKENS = 30_000
 const MAX_SEARCH_TERMS = 60
 // Server-side refusal fallback (beta) is only accepted by these models (and their dated snapshots).
 const FALLBACK_MODEL_PREFIXES = ['claude-sonnet-5-5', 'claude-opus-5', 'claude-fable-5-1']
+
+interface Submission { questionnaire: unknown, sources: unknown, validation: ValidationResult }
 
 type LastAction = 'start' | 'search' | 'tool_error' | 'invalid' | 'nudge'
 
@@ -56,7 +59,7 @@ export async function runAgent(
   const searchBudget = { remaining: MAX_SEARCH_TERMS }
   const usage: TokenUsage = { inputTokens: 0, outputTokens: 0, cacheReadTokens: 0, cacheWriteTokens: 0 }
   const trace = createTrace(emit)
-  let lastSubmission: { questionnaire: unknown, validation: ValidationResult } | undefined
+  let lastSubmission: Submission | undefined
   let hadInvalidSubmission = false
   let lastAction: LastAction = 'start'
 
@@ -87,10 +90,10 @@ export async function runAgent(
       lastAction = result.is_error ? 'tool_error' : 'search'
     }
     for (const toolUse of toolUses.filter(t => t.name === 'submit_questionnaire')) {
-      const questionnaire = (toolUse.input as { questionnaire?: unknown }).questionnaire
+      const { questionnaire, sources } = toolUse.input as { questionnaire?: unknown, sources?: unknown }
       const validation = await trace.run('validate', 'Validating the Questionnaire', () =>
         deps.validate(questionnaire, collectEvidence(found), signal), result => validationLabel(result, hadInvalidSubmission))
-      lastSubmission = { questionnaire, validation }
+      lastSubmission = { questionnaire, sources, validation }
       results.push(validationResult(toolUse.id, validation))
       if (validation.valid) break
       hadInvalidSubmission = true
@@ -106,9 +109,10 @@ export async function runAgent(
   if (lastSubmission) return finish(lastSubmission, MAX_ITERATIONS)
   throw new AgentError(`The agent did not produce a Questionnaire within ${MAX_ITERATIONS} steps.`)
 
-  function finish(submission: { questionnaire: unknown, validation: ValidationResult }, iterations: number): ConvertResult {
+  function finish(submission: Submission, iterations: number): ConvertResult {
     const result: ConvertResult = {
       questionnaire: submission.questionnaire,
+      sources: itemSources(submission.sources, submission.questionnaire, input),
       valid: submission.validation.valid,
       issues: submission.validation.issues,
       iterations,

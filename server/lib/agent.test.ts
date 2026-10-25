@@ -17,7 +17,7 @@ const WARNING: ValidationIssue = { severity: 'warning', source: 'hapi', message:
 let toolId = 0
 const thinking = (): Block => ({ type: 'thinking', thinking: '', signature: 'sig' } as Block)
 const searchCall = (input: unknown = { questions: ['heart rate'] }): Block => ({ type: 'tool_use', id: `t${++toolId}`, name: 'search_loinc', input } as Block)
-const submitCall = (questionnaire: unknown = QUESTIONNAIRE): Block => ({ type: 'tool_use', id: `t${++toolId}`, name: 'submit_questionnaire', input: { questionnaire } } as Block)
+const submitCall = (questionnaire: unknown = QUESTIONNAIRE, sources?: unknown): Block => ({ type: 'tool_use', id: `t${++toolId}`, name: 'submit_questionnaire', input: { questionnaire, ...(sources ? { sources } : {}) } } as Block)
 
 function reply(content: Block[], stop_reason: Anthropic.Beta.BetaStopReason = 'tool_use'): Anthropic.Beta.BetaMessage {
   return {
@@ -61,6 +61,22 @@ function lastToolResults(params: Params) {
 }
 
 describe('runAgent', () => {
+  it('returns the sources of the last submission, checked against the pasted text', async () => {
+    const { run } = setup([
+      reply([submitCall(QUESTIONNAIRE, { hr: 'Something else' })]),
+      reply([submitCall(QUESTIONNAIRE, { hr: 'Heart rate: ____', nope: 'x' })])
+    ], { validate: vi.fn().mockResolvedValueOnce({ valid: false, issues: [ERROR] }).mockResolvedValue({ valid: true, issues: [] }) })
+
+    const result = await run()
+
+    expect(result.sources).toEqual([{ linkId: 'hr', excerpt: 'Heart rate: ____', found: true }])
+  })
+
+  it('returns no sources when the model gives none', async () => {
+    const { run } = setup([reply([submitCall()])])
+    expect((await run()).sources).toEqual([])
+  })
+
   it('searches, submits a valid Questionnaire and reports the result', async () => {
     const { deps, calls, events, run } = setup([
       reply([thinking(), searchCall()]),

@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import type { ItemSource } from '../../shared/types'
 import { listCodes } from '../utils/questionnaire'
 
-const props = defineProps<{ questionnaire: unknown, coverage: { coded: number, total: number } }>()
+const props = defineProps<{ questionnaire: unknown, sources: ItemSource[], coverage: { coded: number, total: number } }>()
 
 const rows = computed(() => listCodes(props.questionnaire))
+const sourceOf = computed(() => new Map(props.sources.map(source => [source.linkId, source])))
 const percent = computed(() => (props.coverage.total ? Math.round((props.coverage.coded / props.coverage.total) * 100) : 0))
 </script>
 
@@ -25,6 +27,9 @@ const percent = computed(() => (props.coverage.total ? Math.round((props.coverag
             </th>
             <th class="px-3 py-2 font-medium">
               Display
+            </th>
+            <th class="px-3 py-2 font-medium">
+              Form text
             </th>
           </tr>
         </thead>
@@ -52,6 +57,19 @@ const percent = computed(() => (props.coverage.total ? Math.round((props.coverag
             </td>
             <td class="px-3 py-2 align-top text-xs text-default">
               {{ row.display || row.text }}
+            </td>
+            <td class="px-3 py-2 align-top text-xs text-toned">
+              <template v-if="sourceOf.get(row.linkId)">
+                <q>{{ sourceOf.get(row.linkId)!.excerpt }}</q>
+                <span
+                  v-if="sourceOf.get(row.linkId)!.found === false"
+                  class="ml-1 text-warning"
+                >(not found in the pasted text)</span>
+              </template>
+              <span
+                v-else
+                class="text-dimmed"
+              >none given</span>
             </td>
           </tr>
         </tbody>

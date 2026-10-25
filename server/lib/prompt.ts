@@ -33,6 +33,9 @@ Always finish by calling submit_questionnaire; a turn without a tool call wastes
 - Mark items required only when the form says so. Use enableWhen only when the form states the condition explicitly ("If yes, …"); with more than one enableWhen, set enableBehavior.
 - Never use rendering-xhtml, rendering-markdown or other rendering extensions: plain text only.
 
+## Sources
+With every submission, fill "sources": for each item, keyed by its linkId, copy the words of the form it comes from, exactly as written (the question line, with its answer choices if they are on the same line; the heading for a group). Keep each one short: one or two lines. A reviewer compares them with the original form.
+
 This is a demo for blank forms. If the input is not a form at all, submit a Questionnaire with a single display item that says the input did not contain a form.`
 
 export const TOOLS: Anthropic.Beta.BetaToolUnion[] = [
@@ -69,6 +72,11 @@ export const TOOLS: Anthropic.Beta.BetaToolUnion[] = [
         questionnaire: {
           type: 'object',
           description: 'The FHIR R4 Questionnaire resource as JSON.'
+        },
+        sources: {
+          type: 'object',
+          description: 'For each item, keyed by linkId: the words of the original form it comes from, copied exactly. One or two lines each.',
+          additionalProperties: { type: 'string' }
         }
       },
       required: ['questionnaire'],

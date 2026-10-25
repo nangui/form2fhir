@@ -24,9 +24,19 @@ export interface TokenUsage {
   cacheWriteTokens: number
 }
 
+/** Where an item comes from in the original form, as quoted by the agent. */
+export interface ItemSource {
+  linkId: string
+  excerpt: string
+  /** Found in the pasted text (true/false); null when the form was a PDF or an image. */
+  found: boolean | null
+}
+
 export interface ConvertResult {
   /** The last submitted Questionnaire (FHIR JSON). */
   questionnaire: unknown
+  /** The form's own words behind each item, from the same submission. */
+  sources: ItemSource[]
   /** True only when local checks and HAPI $validate reported no errors. */
   valid: boolean
   issues: ValidationIssue[]

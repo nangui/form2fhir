@@ -69,6 +69,7 @@ const tabs = computed(() => {
         <template #codes>
           <CodesTable
             :questionnaire="result.questionnaire"
+            :sources="result.sources ?? []"
             :coverage="coverage ?? { coded: 0, total: 0 }"
           />
         </template>
