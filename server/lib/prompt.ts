@@ -8,7 +8,7 @@ The form arrives in the user turn: as text inside <form_content> tags, or as an 
 
 ## How to work
 You have very few turns, so batch your work:
-1. Read the whole form. Call search_loinc with every question that could have a standard code: vital signs and body measurements, lab results, demographics (sex, age, date of birth), smoking and alcohol use, symptoms and screening questions. Put the name of every known instrument in "panels": the whole form (PHQ-9, GAD-7…) and any instrument embedded in a longer form (AUDIT-C, PHQ-2…).
+1. Read the whole form. Call search_loinc with every question that could have a standard code: vital signs and body measurements, lab results, demographics (sex, age, date of birth), smoking and alcohol use, symptoms and screening questions. Put the name of every known instrument in "panels": the whole form (PHQ-9, GAD-7…) and any instrument embedded in a longer form (AUDIT-C, PHQ-2…). For an embedded instrument, also put each of its questions in "questions": panel definitions can be incomplete.
    LOINC search is English-only: always search with short English clinical terms ("systolic blood pressure", "body weight", "glucose fasting", "little interest or pleasure in doing things"), whatever the language of the form. Keep the item text in the form's own language.
 2. If the first results leave standard items uncoded, you may run one more search_loinc round with refined English terms (for example "body weight measured" instead of "weight"). Then call submit_questionnaire with the complete Questionnaire.
 3. If submit_questionnaire returns errors, fix all of them at once and submit the complete corrected Questionnaire again.
@@ -17,7 +17,7 @@ Always finish by calling submit_questionnaire; a turn without a tool call wastes
 ## LOINC rules
 - Use only codes that search_loinc returned in this conversation, including answer codes (LA…). Never write a LOINC code from memory: the server rejects any code it did not return.
 - If no result clearly matches a question, leave that item without a code. An uncoded item is better than a wrong code.
-- When a known instrument matches a LOINC panel, put the panel code on Questionnaire.code (or on the group that holds an embedded instrument). The top panel hit lists its official questions in "members": prefer the member code that asks the same question as the item over a similar standalone question. A member only matches if it asks the same thing; otherwise use a standalone hit that clearly does, or leave the item uncoded.
+- When a known instrument matches a LOINC panel, put the panel code on Questionnaire.code (or on the group that holds an embedded instrument). The top panel hit lists its official questions in "members": prefer the member code that asks the same question as the item over a similar standalone question. A member only matches if it asks the same thing. Panel definitions can be incomplete (a member may be missing or replaced by a different question): when no member asks the item's question, use a standalone hit that clearly asks the same thing; leave the item uncoded only if none does.
 - When a hit or member has an answer list and the form uses the same answers, use those LA codes in answerOption.valueCoding. Every answer that has a "score" for that question must carry it as an ordinalValue extension with exactly that value; the server rejects missing or different scores. Never invent a score for an answer that has none.
 - System is always exactly "http://loinc.org". Include "display" with the LOINC name.
 
@@ -41,7 +41,7 @@ This is a demo for blank forms. If the input is not a form at all, submit a Ques
 export const TOOLS: Anthropic.Beta.BetaToolUnion[] = [
   {
     name: 'search_loinc',
-    description: 'Search LOINC (NLM Clinical Tables) for question codes and panel/form codes. Send all searches in one call. '
+    description: 'Search LOINC (NLM Clinical Tables) for question codes and panel/form codes. Send all searches in one call, at most 25 terms in total (questions and panels). '
       + 'Returns, per search term, up to 7 hits with code, display name, datatype, units and the first answer list (LA codes with scores) when the term has one. '
       + 'For a panel search, the top hit also lists the panel\'s official questions in "members", with their answers and scores. '
       + 'Only codes returned here may be used in the Questionnaire.',

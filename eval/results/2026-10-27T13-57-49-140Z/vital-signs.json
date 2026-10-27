@@ -1,0 +1,386 @@
+{
+  "questionnaire": {
+    "resourceType": "Questionnaire",
+    "name": "VitalSignsIntake",
+    "title": "Vital Signs Intake",
+    "status": "draft",
+    "item": [
+      {
+        "linkId": "dt",
+        "text": "Date and time of measurement",
+        "type": "dateTime"
+      },
+      {
+        "linkId": "temp",
+        "code": [
+          {
+            "system": "http://loinc.org",
+            "code": "8310-5",
+            "display": "Body temperature"
+          }
+        ],
+        "text": "Body temperature",
+        "type": "decimal",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+            "valueCoding": {
+              "system": "http://unitsofmeasure.org",
+              "code": "Cel",
+              "display": "°C"
+            }
+          }
+        ]
+      },
+      {
+        "linkId": "hr",
+        "code": [
+          {
+            "system": "http://loinc.org",
+            "code": "8867-4",
+            "display": "Heart rate"
+          }
+        ],
+        "text": "Heart rate",
+        "type": "integer",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+            "valueCoding": {
+              "system": "http://unitsofmeasure.org",
+              "code": "{beats}/min",
+              "display": "beats/min"
+            }
+          }
+        ]
+      },
+      {
+        "linkId": "rr",
+        "code": [
+          {
+            "system": "http://loinc.org",
+            "code": "9303-9",
+            "display": "Respiratory rate --resting"
+          }
+        ],
+        "text": "Respiratory rate",
+        "type": "integer",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+            "valueCoding": {
+              "system": "http://unitsofmeasure.org",
+              "code": "{breaths}/min",
+              "display": "breaths/min"
+            }
+          }
+        ]
+      },
+      {
+        "linkId": "bp",
+        "text": "Blood pressure (seated)",
+        "type": "group",
+        "item": [
+          {
+            "linkId": "bp-sys",
+            "code": [
+              {
+                "system": "http://loinc.org",
+                "code": "8480-6",
+                "display": "Systolic blood pressure"
+              }
+            ],
+            "text": "Systolic",
+            "type": "integer",
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                "valueCoding": {
+                  "system": "http://unitsofmeasure.org",
+                  "code": "mm[Hg]",
+                  "display": "mmHg"
+                }
+              }
+            ]
+          },
+          {
+            "linkId": "bp-dia",
+            "code": [
+              {
+                "system": "http://loinc.org",
+                "code": "8462-4",
+                "display": "Diastolic blood pressure"
+              }
+            ],
+            "text": "Diastolic",
+            "type": "integer",
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                "valueCoding": {
+                  "system": "http://unitsofmeasure.org",
+                  "code": "mm[Hg]",
+                  "display": "mmHg"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "linkId": "spo2",
+        "code": [
+          {
+            "system": "http://loinc.org",
+            "code": "59408-5",
+            "display": "Oxygen saturation in Arterial blood by Pulse oximetry"
+          }
+        ],
+        "text": "Oxygen saturation (SpO2)",
+        "type": "decimal",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+            "valueCoding": {
+              "system": "http://unitsofmeasure.org",
+              "code": "%",
+              "display": "%"
+            }
+          }
+        ]
+      },
+      {
+        "linkId": "weight",
+        "text": "Body weight",
+        "type": "decimal",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+            "valueCoding": {
+              "system": "http://unitsofmeasure.org",
+              "code": "kg",
+              "display": "kg"
+            }
+          }
+        ]
+      },
+      {
+        "linkId": "height",
+        "code": [
+          {
+            "system": "http://loinc.org",
+            "code": "8302-2",
+            "display": "Body height"
+          }
+        ],
+        "text": "Body height",
+        "type": "decimal",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+            "valueCoding": {
+              "system": "http://unitsofmeasure.org",
+              "code": "cm",
+              "display": "cm"
+            }
+          }
+        ]
+      },
+      {
+        "linkId": "pain",
+        "code": [
+          {
+            "system": "http://loinc.org",
+            "code": "72514-3",
+            "display": "Pain severity - 0-10 verbal numeric rating [Score] - Reported"
+          }
+        ],
+        "text": "Pain severity (0 = no pain, 10 = worst imaginable pain)",
+        "type": "integer"
+      },
+      {
+        "linkId": "o2use",
+        "text": "Is the patient currently using supplemental oxygen?",
+        "type": "boolean"
+      },
+      {
+        "linkId": "o2flow",
+        "code": [
+          {
+            "system": "http://loinc.org",
+            "code": "3151-8",
+            "display": "Inhaled oxygen flow rate"
+          }
+        ],
+        "text": "If yes, oxygen flow rate",
+        "type": "decimal",
+        "enableWhen": [
+          {
+            "question": "o2use",
+            "operator": "=",
+            "answerBoolean": true
+          }
+        ],
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+            "valueCoding": {
+              "system": "http://unitsofmeasure.org",
+              "code": "L/min",
+              "display": "L/min"
+            }
+          }
+        ]
+      },
+      {
+        "linkId": "notes",
+        "text": "Notes",
+        "type": "text"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "linkId": "dt",
+      "excerpt": "Date and time of measurement: ____________",
+      "found": true
+    },
+    {
+      "linkId": "temp",
+      "excerpt": "Body temperature: ______ °C",
+      "found": true
+    },
+    {
+      "linkId": "hr",
+      "excerpt": "Heart rate: ______ beats/min",
+      "found": true
+    },
+    {
+      "linkId": "rr",
+      "excerpt": "Respiratory rate: ______ breaths/min",
+      "found": true
+    },
+    {
+      "linkId": "bp",
+      "excerpt": "Blood pressure (seated): ______ / ______ mmHg (systolic / diastolic)",
+      "found": true
+    },
+    {
+      "linkId": "bp-sys",
+      "excerpt": "Blood pressure (seated): ______ / ______ mmHg (systolic / diastolic)",
+      "found": true
+    },
+    {
+      "linkId": "bp-dia",
+      "excerpt": "Blood pressure (seated): ______ / ______ mmHg (systolic / diastolic)",
+      "found": true
+    },
+    {
+      "linkId": "spo2",
+      "excerpt": "Oxygen saturation (SpO2): ______ %",
+      "found": true
+    },
+    {
+      "linkId": "weight",
+      "excerpt": "Body weight: ______ kg",
+      "found": true
+    },
+    {
+      "linkId": "height",
+      "excerpt": "Body height: ______ cm",
+      "found": true
+    },
+    {
+      "linkId": "pain",
+      "excerpt": "Pain severity (0 = no pain, 10 = worst imaginable pain): ______",
+      "found": true
+    },
+    {
+      "linkId": "o2use",
+      "excerpt": "Is the patient currently using supplemental oxygen?  ☐ Yes  ☐ No",
+      "found": true
+    },
+    {
+      "linkId": "o2flow",
+      "excerpt": "If yes, oxygen flow rate: ______ L/min",
+      "found": true
+    },
+    {
+      "linkId": "notes",
+      "excerpt": "Notes: ____________________________________________",
+      "found": true
+    }
+  ],
+  "valid": true,
+  "issues": [
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[1].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[2].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[3].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[4].item[0].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[4].item[1].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[5].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[7].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[8].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "The code cannot be checked because codeSystem 'http://loinc.org' version 'null' is not supported (null)",
+      "location": "Questionnaire.item[10].code[0]"
+    },
+    {
+      "severity": "warning",
+      "source": "hapi",
+      "message": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)",
+      "location": "Questionnaire"
+    }
+  ],
+  "iterations": 2,
+  "model": "claude-sonnet-5-5",
+  "usage": {
+    "inputTokens": 6,
+    "outputTokens": 2318,
+    "cacheReadTokens": 2954,
+    "cacheWriteTokens": 8061
+  },
+  "durationMs": 14832
+}

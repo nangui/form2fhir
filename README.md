@@ -61,17 +61,17 @@ Five blank forms (`eval/fixtures.json` lists each one's source and license), run
 
 | Form | Lang | Valid | Claude calls | LOINC coverage | Code accuracy | Time | Est. cost |
 |---|---|---|---|---|---|---|---|
-| Vital Signs Intake | en | ✅ | 2 | 8/13 (62%) | 8/10 | 12.9 s | $0.040 |
-| PHQ-9 | en | ✅ | 2 | 10/10 (100%) | 10/10 | 24.1 s | $0.055 |
-| Pre-Visit Health Questionnaire (PDF) | en | ✅ | 2 | 4/11 (36%) | 3/4 | 15.7 s | $0.031 |
-| Questionnaire relatif à l'état de santé du sportif mineur (Journal officiel, PDF) | fr | ✅ | 2 | 1/26 (4%) | 0/1 | 16.6 s | $0.049 |
-| Bilan annuel de suivi (diabète de type 2, PDF, 3 pages) | fr | ✅ | 2 | 16/56 (29%) | 14/20 | 45.8 s | $0.126 |
+| Vital Signs Intake | en | ✅ | 2 | 9/13 (69%) | 8/10 (1 wrong) | 14.8 s | $0.044 |
+| PHQ-9 | en | ✅ | 2 | 10/10 (100%) | 10/10 | 26.5 s | $0.083 |
+| Pre-Visit Health Questionnaire (PDF) | en | ✅ | 2 | 4/11 (36%) | 2/4 | 14.0 s | $0.033 |
+| Questionnaire relatif à l'état de santé du sportif mineur (Journal officiel, PDF) | fr | ✅ | 2 | 1/26 (4%) | 0/1 | 21.8 s | $0.063 |
+| Bilan annuel de suivi (diabète de type 2, PDF, 3 pages) | fr | ✅ | 3 | 16/56 (29%) | 15/20 | 75.7 s | $0.159 |
 
-**5/5 valid** · median 16.6 s · total ≈ $0.30 · code accuracy 35/45 (78%), **0 wrong** (2026-10-20, `eval/results/`).
+**5/5 valid** · median 21.8 s · total ≈ $0.38 · code accuracy 35/45 (78%), 1 wrong (2026-10-27, `eval/results/`).
 
 How to read it:
 - **Valid** means the HAPI FHIR `$validate` operation reported no errors *and* the server's own checks passed (every LOINC code was returned by a search in the same run).
-- **Code accuracy** compares the agent's codes with an answer key of 45 items (`expectedCodes` in `eval/fixtures.json`, each code checked against the LOINC API): correct, wrong (another code) or missing (uncoded). Valid FHIR is not enough: a Questionnaire can pass `$validate` with the wrong code. Re-scoring the previous run (2026-10-16) gives 37/45 with 2 wrong, among them the PHQ-9 difficulty question coded with the generic 44256-6 instead of the panel's own 69722-7. Since panel searches return the panel's official questions, PHQ-9 is 10/10 and no code is wrong; the agent leaves a few more items uncoded instead (AUDIT-C item 1, whose code is missing from NLM's AUDIT-C definition). One run per form, so expect some variance.
+- **Code accuracy** compares the agent's codes with an answer key of 45 items (`expectedCodes` in `eval/fixtures.json`, each code checked against the LOINC API): correct, wrong (another code) or missing (uncoded). Valid FHIR is not enough: a Questionnaire can pass `$validate` with the wrong code. Re-scoring the previous run (2026-10-16) gives 37/45 with 2 wrong, among them the PHQ-9 difficulty question coded with the generic 44256-6 instead of the panel's own 69722-7. Since panel searches return the panel's official questions, the PHQ-9 is 10/10 with no wrong code; the agent leaves a few more items uncoded instead. NLM's AUDIT-C definition replaces item 1 (68518-0) with another question, so the agent now also searches each question of an embedded instrument on its own: AUDIT-C item 1 is coded since 2026-10-27. The one wrong code is the respiratory rate coded as "Respiratory rate --resting" (9303-9) instead of 9279-1; the form does not say whether the patient is at rest. Pre-Visit went from 3/4 to 2/4 in this run (pain left uncoded). One run per form, so expect some variance between runs.
 - **LOINC coverage** counts every question item, including ones no terminology would code (name, consultation date, free-text notes, or the French sports questionnaire's custom questions). Codes are only added when a search result clearly matches; an uncoded item is preferred to a wrong code.
 - A first run scored 8/56 on the diabetes form because the agent submitted after a single search round. Telling it to always search in English (the LOINC API is English-only), to cover standard measurements systematically and to search embedded instruments (AUDIT-C, PHQ-2) raised it to 18/56 with no wrong codes. Both runs are kept in `eval/results/`.
 
