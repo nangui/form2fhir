@@ -67,11 +67,19 @@ describe('parseFormInput', () => {
   })
 
   it('counts pages in linear time, even on a crafted file built to slow the regex down', () => {
-    const crafted = Buffer.from(`%PDF-1.7\n${'/Type/Pages '.repeat(250_000)}`) // ~3 MB, no closing ">"
-    const start = performance.now()
+    // Compares growth, not wall time, so a busy machine does not fail it: 4x the input must take
+    // well under 16x the time (quadratic). Best of 5 runs per size to ignore one-off pauses.
+    const limits = { ...LIMITS, maxFileBytes: 4 * 1024 * 1024, maxPdfPages: 5 }
+    const crafted = (repeats: number) => Buffer.from(`%PDF-1.7\n${'/Type/Pages '.repeat(repeats)}`) // no closing ">"
+    const bestTime = (data: Buffer) => Math.min(...[1, 2, 3, 4, 5].map(() => {
+      const start = performance.now()
+      expect(parseFormInput(file(data), limits)).toMatchObject({ kind: 'pdf' })
+      return performance.now() - start
+    }))
 
-    expect(parseFormInput(file(crafted), { ...LIMITS, maxFileBytes: 4 * 1024 * 1024, maxPdfPages: 5 })).toMatchObject({ kind: 'pdf' })
-    expect(performance.now() - start).toBeLessThan(500)
+    const small = bestTime(crafted(10_000))
+    const large = bestTime(crafted(40_000)) // ~480 KB
+    expect(large / small).toBeLessThan(8)
   })
 
   it('also reads the page tree count when page objects are hidden in compressed streams', () => {
